@@ -25,9 +25,8 @@ public class Room implements Comparable<Room>{
         return roomPrice;
     }
 
-    @Override
-    public String toString(){
-        return "객실번호 : "+ getRoomNumber() + " | 객실 크기 :" + getRoomSize() + " | 가격 : "+String.format("%,d",getRoomPrice())+"원";
+    public void showIntroduce() {
+        System.out.printf("객실 번호 : %-4s | 객실 크기 : %-8s | 가격 : %,7d원\n", getRoomNumber(), getRoomSize(), getRoomPrice());
     }
 
     //Collections.sort()메소드는 객체를 정렬할 때
