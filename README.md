@@ -48,8 +48,8 @@
 
 ## Contact
 👩‍💻 최정은 - [Blog](https://velog.io/@temprmn) / [GitHub](https://github.com/jungeun5-choi/)<br>
-👨‍💻 조우진 - [Blog]() / [GitHub](https://github.com/VVooJIN3)<br>
-👩‍💻 박서연 - [Blog]() / [GitHub](https://github.com/seoyeonpark99)<br>
-👩‍💻 서예린 - [Blog]() / [GitHub](https://github.com/yesrin)<br>
+👨‍💻 조우진 - [Blog](https://velog.io/@dnwls3525) / [GitHub](https://github.com/VVooJIN3)<br>
+👩‍💻 박서연 - [Blog](https://velog.io/@helloh1h1) / [GitHub](https://github.com/seoyeonpark99)<br>
+👩‍💻 서예린 - [Blog](https://velog.io/@yesrin) / [GitHub](https://github.com/yesrin)<br>
 👨‍💻 안정민 - [Blog](https://velog.io/@symbol9550) / [GitHub](https://github.com/MI-Ryeon)<br>
 
