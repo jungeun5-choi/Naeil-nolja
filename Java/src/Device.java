@@ -1,87 +1,73 @@
 import java.util.*;
 
 public class Device {
-    HashMap<String, Hotel> hotels = new HashMap<>();
-    ArrayList<Room> allRooms = new ArrayList<>();
-
+    private TreeMap<Integer,Room> rooms = new TreeMap<>();
+    public static final String FONT_GREEN = "\u001B[32m";
+    public static final String FONT_RESET = "\u001B[0m";
+    public static final String FONT_BLUE = "\u001B[34m";
+    private Hotel hotel;
     public void inputHotel() {
+        //rooms에 key=호실번호, value= room객체를 담기
+        rooms.put(101,new Room(101, RoomSize.Standard, 62000));
+        rooms.put(102,new Room(102, RoomSize.Standard, 74000));
+        rooms.put(201,new Room(201, RoomSize.Twin, 80000));
+        rooms.put(202,new Room(202, RoomSize.Twin, 76000));
+        rooms.put(301,new Room(301, RoomSize.Delux, 90000));
+        rooms.put(402,new Room(402, RoomSize.Family, 110000));
+        rooms.put(502,new Room(502, RoomSize.Suite, 150000));
 
-        ArrayList<Room> ihgRooms = new ArrayList<>();
-        ihgRooms.add(new Room(101, 30, 300000));
-        ihgRooms.add(new Room(102, 40, 400000));
-        ihgRooms.add(new Room(103, 40, 600000));
-        ihgRooms.add(new Room(104, 20, 120000));
-        Hotel ihg = new Hotel("인터컨티넨탈", ihgRooms, 0);
+        hotel = new Hotel("스파르타 호텔", rooms, 0);
 
-        ArrayList<Room> jwRooms = new ArrayList<>();
-
-        jwRooms.add(new Room(101, 30, 350000));
-        jwRooms.add(new Room(102, 40, 450000));
-        jwRooms.add(new Room(103, 30, 250000));
-        Hotel jw = new Hotel("JW 메리어트", jwRooms, 0);
-
-
-        hotels.put(jw.getHotelName(), jw);
-        hotels.put(ihg.getHotelName(), ihg);
 
     }
 
     public void setup() {
-        //조우진 테스트용
-        while(true) {
+
+        //조우진 객실조회
+        while (true) {
             Scanner sc = new Scanner(System.in);
             System.out.println("--------------------------------");
-            System.out.println("\"내일 놀자에 오신 것을 환영합니다!\"");
-            System.out.println("[호텔 목록]");
-            System.out.println(hotels.keySet());
-
+            System.out.println("\"스파르타 호텔에 오신 것을 환영합니다!\"");
+            System.out.println(FONT_GREEN+"현재 투숙가능한 객실은 "+FONT_BLUE+rooms.size()+FONT_GREEN+"개 입니다."+FONT_RESET);
             System.out.println("조회할 방법을 선택하세요.");
-            System.out.println(hotels.get("JW 메리어트").getCheapestRoom().toString());
-            System.out.println("1. 호텔 전체 객실 조회   2. 호텔별 최저가 검색 3. 호텔 이름으로 검색");
+            System.out.println("1. 전체 객실 조회   2. 최저가 순 조회 3. 최고가 순 조회"); //최저가, 최고가 정렬 현재 미구현
             System.out.println("--------------------------------");
             int input = sc.nextInt();
             sc.nextLine();
-            if (input == 1) {
-                selectAll();
-            } else if (input == 2) {
-
-            } else if (input == 3) {
-                System.out.println("호텔 이름을 입력하세요.");
-                String hotelName = sc.nextLine();
-                while(true) {
-                    Hotel selectHotel = selectHotelName(hotelName);
-                    System.out.println("1. 예약하기 2.최저가순으로 보기 3.최고가순으로 보기");
-                    System.out.println("--------------------------------");
-                    input = sc.nextInt();
-                    sc.nextLine();
-                    if (input == 1) {
-                        //예약하는 메서드
-                        break;
-                    } else if (input == 2) {
-                        selectHotel.sortCheap();
-                    } else if (input == 3) {
-                        selectHotel.sortExpansive();
-                    }
+            switch (input) {
+                case 1: {
+                    selectAll();
+                    break;
+                }
+                case 2: {
+//                    hotel.sortCheap(); 리스트에서
+                    selectAll();
+                    break;
+                }
+                case 3: {
+//                    hotel.sortExpansive();
+                    selectAll();
+                    break;
+                }
+                default:{
+                    System.out.println("잘못된 번호입력입니다.");
+                    selectAll();
+                    break;
                 }
             }
+            System.out.println("1. 예약하기 2. 뒤로가기");
+            input = sc.nextInt();
+            if (input == 1) {
+                System.out.println("예약할 호실번호를 입력하세요.");
+                input = sc.nextInt();
+                System.out.println("선택한 객실 :");
+                Room selectRoom = rooms.get(input); //예약하기에서 처리할 선택객실
+                rooms.get(input).showIntroduce();
+            }
+
         }
-
     }
-
-    public Hotel selectHotelName(String hotelName) {
-
-        if (hotels.containsKey(hotelName)) {
-            hotels.get(hotelName).showRooms();
-            return hotels.get(hotelName);
-        } else {
-            System.out.println("해당 이름의 호텔이 존재하지 않습니다.");
-        }
-        return null;
-    }
-
     public void selectAll() {
-        for(Hotel hotel : hotels.values()){
-            hotel.showRooms();
-        }
+        hotel.showRooms();
     }
 }
