@@ -30,4 +30,14 @@ public class Customer {
     public String toString(){
         return  name+","+phoneNumber+","+money;
     }
+
+    /* setter */
+    // 자산 더하기
+    public void addCustomerMoney(int money) {
+        this.money += money;
+    }
+    // 자산 빼기
+    public void subtractCustomerMoney(int money) {
+        this.money -= money;
+    }
 }

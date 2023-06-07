@@ -30,7 +30,6 @@ public class Hotel {
     public Room getRoom(int index) { // 객실 한 개
         return rooms.get(index);
     }
-<<<<<<< HEAD
 
 //    public UUID getReservationNumber() {
 //        return reservationNumber;
@@ -46,6 +45,7 @@ public class Hotel {
             System.out.println(room.toString());
         }
     }
+
     public void sortCheap(){ //저렴한 가격순으로 정렬
         Collections.sort(rooms);
     }
@@ -53,4 +53,13 @@ public class Hotel {
         Collections.sort(rooms, Collections.reverseOrder());
     }
 
+    /* setter */
+    // 자산 더하기
+    public void addHotelAsset(int asset) {
+        this.asset += asset;
+    }
+    // 자산 빼기
+    public void subtractHotelAsset(int asset) {
+        this.asset -= asset;
+    }
 }
