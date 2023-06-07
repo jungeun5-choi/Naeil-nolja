@@ -60,7 +60,7 @@ public class Reserve {
     }
 
     // 전체 예약 개수를 호출
-    public int getReservedRoomSize() {
+    public int getReservedCount() {
         return reservedRoom.size();
     }
     // 전체 키 값(uuid)을 호출
