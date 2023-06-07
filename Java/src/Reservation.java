@@ -1,3 +1,5 @@
+package project;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -38,5 +40,20 @@ public class Reservation {
 
     public UUID getReservationNumber() {
         return reservationNumber;
+    }
+
+    public void cancelReservation () {
+        System.out.println("예약번호를 입력해주세요");
+
+        reservationNumber
+
+        }
+        }
+
+
+
+
+        }
+         
     }
 }
