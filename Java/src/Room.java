@@ -1,4 +1,4 @@
-public class Room {
+public class Room implements Comparable<Room>{
 
     private int roomNumber; // 번호
     private int roomSize; // 크기
@@ -23,5 +23,24 @@ public class Room {
 
     public int getRoomPrice() {
         return roomPrice;
+    }
+
+    @Override
+    public String toString(){
+        return "객실번호 : "+ getRoomNumber() + " | 객실 크기 :" + getRoomSize() + "㎡ | 가격 : "+String.format("%,d",getRoomPrice())+"원";
+    }
+
+    //Collections.sort()메소드는 객체를 정렬할 때
+    //해당 객체의 Comparable을 구현한 compareTo()메소드를 참조하여 정렬순서를 결정한다.
+    //따라서 정렬할 객체가 Comparable interface를 구현하고, compareTo()메소드 안에 정렬기준을 정의해준다면
+    //Collections.sort()메서드를 사용하여 객체를 사용자 정의형태로 정렬할 수 있다.
+    @Override
+    public int compareTo(Room room){
+        if (room.getRoomPrice() < this.roomPrice){
+            return 1;
+        }else if(room.getRoomPrice() > this.roomPrice){
+            return -1;
+        }
+        return 0;
     }
 }
