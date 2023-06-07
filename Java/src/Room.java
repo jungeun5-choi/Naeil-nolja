@@ -31,4 +31,9 @@ public class Room {
     public int getRoomPrice() {
         return roomPrice;
     }
+
+    @Override
+    public String toString(){
+        return  "번호:"+roomNumber+","+"크기"+roomSize+","+"가격"+roomPrice;
+    }
 }
