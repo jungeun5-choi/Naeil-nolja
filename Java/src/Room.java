@@ -1,12 +1,19 @@
 public class Room implements Comparable<Room>{
 
     private int roomNumber; // 번호
-    private int roomSize; // 크기
+    // private int roomSize; // 크기
+
+    public enum RoomSize {
+        Standard, Twin,
+        Delux, Family, Suite,
+    }
+    private RoomSize roomSize;
+
     private int roomPrice; // 가격
 
     /* 생성자 */
     Room() {}
-    Room(int roomNumber, int roomSize, int roomPrice) {
+    Room(int roomNumber, RoomSize roomSize, int roomPrice) {
         this.roomNumber = roomNumber;
         this.roomSize = roomSize;
         this.roomPrice = roomPrice;
@@ -17,7 +24,7 @@ public class Room implements Comparable<Room>{
         return roomNumber;
     }
 
-    public int getRoomSize() {
+    public RoomSize getRoomSize() {
         return roomSize;
     }
 

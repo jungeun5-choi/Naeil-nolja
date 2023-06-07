@@ -14,23 +14,23 @@ public class Hotel {
         this.rooms = rooms;
         this.asset = asset;
 //        this.reservationNumber = reservationNumber;
+
     }
 
     /* getter */
     public String getHotelName() {
         return hotelName;
     }
-
     public int getAsset() {
         return asset;
     }
-
     public ArrayList<Room> getRooms() { // 객실 전체
         return rooms;
     }
     public Room getRoom(int index) { // 객실 한 개
         return rooms.get(index);
     }
+<<<<<<< HEAD
 
 //    public UUID getReservationNumber() {
 //        return reservationNumber;
@@ -52,6 +52,5 @@ public class Hotel {
     public void sortExpansive(){ //비싼 가격순으로 정렬
         Collections.sort(rooms, Collections.reverseOrder());
     }
-
 
 }
