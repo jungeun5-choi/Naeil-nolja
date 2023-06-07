@@ -43,7 +43,7 @@ public class Hotel {
     public void showRooms() {
         System.out.println(hotelName + " 객실 정보 :");
         for (Room room : this.rooms) {
-            System.out.println(room.toString());
+            System.out.printf("객실 번호 : %-4s | 객실 크기 : %-8s | 가격 : %,7d원\n",room.getRoomNumber(),room.getRoomSize(),room.getRoomPrice());
         }
     }
     public void sortCheap(){ //저렴한 가격순으로 정렬
