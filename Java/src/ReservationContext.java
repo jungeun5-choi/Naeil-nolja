@@ -53,6 +53,14 @@ public class ReservationContext {
 
     }
 
+    public void selectReservationUseName(String customerName){ // 고객이름으로 찾는 리스트
+
+        System.out.println("예약번호:"+customerName+", 예약정보:"+ reservationNumberMap.get(customerName));
+
+    }
+
+
+
 
 
 }
