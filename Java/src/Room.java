@@ -13,7 +13,7 @@ public class Room {
 
     /* 생성자 */
     Room() {}
-    Room(int roomNumber, int roomSize, int roomPrice) {
+    Room(int roomNumber, RoomSize roomSize, int roomPrice) {
         this.roomNumber = roomNumber;
         this.roomSize = roomSize;
         this.roomPrice = roomPrice;
@@ -24,7 +24,7 @@ public class Room {
         return roomNumber;
     }
 
-    public int getRoomSize() {
+    public RoomSize getRoomSize() {
         return roomSize;
     }
 
