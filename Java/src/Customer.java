@@ -25,4 +25,9 @@ public class Customer {
     public int getMoney() {
         return money;
     }
+
+    @Override
+    public String toString(){
+        return  name+","+phoneNumber+","+money;
+    }
 }
