@@ -1,7 +1,14 @@
 public class Room {
 
     private int roomNumber; // 번호
-    private int roomSize; // 크기
+    // private int roomSize; // 크기
+
+    public enum RoomSize {
+        Standard, Twin,
+        Delux, Family, Suite,
+    }
+    private RoomSize roomSize;
+
     private int roomPrice; // 가격
 
     /* 생성자 */
