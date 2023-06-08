@@ -333,8 +333,6 @@ public class HotelReservationApp {
             customerMode();
         } else {
             selectedDate = date;
-            System.out.println(selectedDate.atStartOfDay(ZoneId.systemDefault()));
-//            System.out.println(ZonedDateTime.now(seoul).withNano(0));
             System.out.println("예약날짜가 변경되었습니다. 해당 날짜의 예약가능한 객실을 다시 불러옵니다.");
         }
     }
