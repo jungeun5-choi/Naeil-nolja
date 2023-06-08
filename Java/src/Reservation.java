@@ -2,7 +2,6 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class Reservation {
-
     private Room room; // 객실
     private String customerName; // 고객 이름
     private String customerPhoneNumber; // 고객 전화번호

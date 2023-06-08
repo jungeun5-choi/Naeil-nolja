@@ -62,8 +62,8 @@ public class HotelReservationApp {
     // 1개의 Reservation에서 파싱한 날짜 정보 호출 - uuid 필요
     public String getParseDate(UUID myUUID) {
 
-//        String parseDate = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 1234-56-78 형태변환
-        String parseDate = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
+        String parseDate = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // 1234-56-78 형태변환
+//        String parseDate = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
         return parseDate;
     }
 
