@@ -5,7 +5,6 @@ public class Hotel {
     private String hotelName; // 호텔 이름
     private TreeMap<Integer,Room> rooms = new TreeMap<>(); // 객실 여러개
     private int asset; // 보유 자산
-//    private UUID reservationNumber; // 예약 번호 (uuid)
 
     /* 생성자 */
     public Hotel(){}
@@ -13,7 +12,6 @@ public class Hotel {
         this.hotelName = hotelName;
         this.rooms = rooms;
         this.asset = asset;
-//        this.reservationNumber = reservationNumber;
 
     }
 
@@ -41,21 +39,6 @@ public class Hotel {
 //    {
 //        return Collections.min(rooms);
 //    }
-    public void showRooms() {
-        System.out.println(hotelName + " 객실 정보 :");
-        for (Room room : this.rooms.values()) {
-            room.showIntroduce();
-        }
-    }
-
-
-//    public void sortCheap(){ //저렴한 가격순으로 정렬
-//        Collections.sort(rooms);
-//    }
-//    public void sortExpansive(){ //비싼 가격순으로 정렬
-//        Collections.sort(rooms, Collections.reverseOrder());
-//    }
-
 
     /* setter */
     // 자산 더하기
