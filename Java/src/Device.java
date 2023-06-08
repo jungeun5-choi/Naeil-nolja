@@ -43,7 +43,7 @@ public class Device {
 
     }
 
-    public void showRoomList() {
+    public void display() {
         Room selectedRoom;
 
         while (true) {
