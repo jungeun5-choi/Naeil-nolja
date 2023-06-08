@@ -12,16 +12,17 @@ public class Hotel {
         this.hotelName = hotelName;
         this.rooms = rooms;
         this.asset = asset;
+
     }
 
     /* getter */
     public String getHotelName() {
         return hotelName;
     }
-
     public int getAsset() {
         return asset;
     }
+
 
     public TreeMap<Integer,Room> getRooms() { // 객실 전체
         return rooms;
@@ -30,5 +31,22 @@ public class Hotel {
         return rooms.get(index);
     }
 
+//    public UUID getReservationNumber() {
+//        return reservationNumber;
+//    }
 
+//    public Room getCheapestRoom()
+//    {
+//        return Collections.min(rooms);
+//    }
+
+    /* setter */
+    // 자산 더하기
+    public void addHotelAsset(int asset) {
+        this.asset += asset;
+    }
+    // 자산 빼기
+    public void subtractHotelAsset(int asset) {
+        this.asset -= asset;
+    }
 }

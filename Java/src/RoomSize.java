@@ -1,3 +1,4 @@
 public enum RoomSize {
-    Standard, Twin, Delux, Family, Suite
+
+    Standard, Twin, Delux, Family, Suite,
 }
