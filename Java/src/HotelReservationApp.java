@@ -56,8 +56,8 @@ public class HotelReservationApp {
     public String getParseDateTime(UUID myUUID) {
 
 //        String parseDateTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); 1234-56-78 12:34:56 형태변환
-        String parseDateTime = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
-
+//        String parseDateTime = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
+        String parseDateTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z")); // 현재시간으로 되어있어 Reserve.class 내 기입된 내용으로 수정
         return parseDateTime;
     }
 
@@ -333,6 +333,8 @@ public class HotelReservationApp {
             customerMode();
         } else {
             selectedDate = date;
+            System.out.println(selectedDate.atStartOfDay(ZoneId.systemDefault()));
+//            System.out.println(ZonedDateTime.now(seoul).withNano(0));
             System.out.println("예약날짜가 변경되었습니다. 해당 날짜의 예약가능한 객실을 다시 불러옵니다.");
         }
     }
@@ -424,7 +426,7 @@ public class HotelReservationApp {
         // 예약 생성
         Reservation reservation = new Reservation(
                 room, customer.getName(), customer.getPhoneNumber(),
-                ZonedDateTime.now(seoul).withNano(0), uuid
+                selectedDate.atStartOfDay(ZoneId.systemDefault()), uuid
         );
         // 생성한 예약을 추가
         reservedRoom.put(uuid, reservation);
