@@ -8,9 +8,9 @@ public class Main {
         Reservation reservation = new Reservation();
         Customer customer = new Customer();
 
-
         HotelReservationApp app = new HotelReservationApp(sc, hotel, room, reservation, customer);
 
         app.startApp();
+
     }
 }

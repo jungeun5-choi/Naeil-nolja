@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -10,14 +11,13 @@ public class ReservationContext {
         ReservationItems();
     }
     static List<Reservation> reservationList =new ArrayList<>(); //전체 예약목록
-
     static Map<UUID, Reservation> reservationNumberMap = new HashMap<UUID, Reservation>();
     public void ReservationItems(){
         Room roomItme1 = new Room(100,RoomSize.Standard,1000000);
         Room roomItme2 = new Room(200,RoomSize.Twin,2000000);
         Room roomItme3 = new Room(300,RoomSize.Suite,3000000);
         Room roomItme4 = new Room(400,RoomSize.Family,4000000);
-        reservation.setReservationDate(LocalDateTime.now());
+        reservation.setReservationDate(LocalDate.now());
 
         UUID number1 = reservation.setReservationNumber(UUID.randomUUID());
         Reservation reservation1 = new Reservation(roomItme1,"서예린","010-1234-1234",reservation.getReservationDate(),reservation.getReservationNumber());
@@ -55,6 +55,10 @@ public class ReservationContext {
 //        System.out.println(reservation3.contains(customerName));
 
     }
-
+    public void selectReservationRooms(){
+        for(Reservation reservation :reservationNumberMap.values()){
+            System.out.println(reservation.getRoom());
+        }
+    }
 
 }

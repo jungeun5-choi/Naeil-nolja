@@ -1,3 +1,8 @@
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Device {
@@ -6,6 +11,10 @@ public class Device {
     public static final String FONT_RESET = "\u001B[0m";
     public static final String FONT_BLUE = "\u001B[34m";
     private Hotel hotel;
+
+    private LocalDate selectedDate = LocalDate.now();
+    Map<UUID, Reservation> reservatedMap = new HashMap<UUID, Reservation>(); // 예약리스트. 이미 예약된 객실을 조회목록에서 빼기 위한 테스트용
+    int reservatedCount = 0;
     Scanner sc = new Scanner(System.in);
 
     public void inputHotel() {
@@ -18,18 +27,29 @@ public class Device {
         rooms.put(402, new Room(402, RoomSize.Family, 110000));
         rooms.put(502, new Room(502, RoomSize.Suite, 150000));
 
-        hotel = new Hotel("스파르타 호텔", rooms, 0);
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+        UUID uuid3 = UUID.randomUUID();
+        Reservation reservation1 = new Reservation( new Room(502, RoomSize.Suite, 150000),"조우진","010-1234-1234",LocalDate.parse("2023-06-08",DateTimeFormatter.ISO_DATE),uuid1);
+        Reservation reservation2 = new Reservation( new Room(101, RoomSize.Standard, 62000),"조우진","010-1234-1234",LocalDate.parse("2023-06-09",DateTimeFormatter.ISO_DATE),uuid2);
+        Reservation reservation3 = new Reservation( new Room(102, RoomSize.Standard, 74000),"조우진","010-1234-1234",LocalDate.parse("2023-06-09",DateTimeFormatter.ISO_DATE),uuid3);
+        //예약리스트에 포함. 예약된 객실을 조회목록에서 빼기 위한 테스트용
+        reservatedMap.put(uuid1,reservation1);
+        reservatedMap.put(uuid2,reservation2);
+        reservatedMap.put(uuid3,reservation3);
 
+
+        hotel = new Hotel("스파르타 호텔", rooms, 0);
 
     }
 
     public void showRoomList() {
-        int again;
         Room selectedRoom;
 
         while (true) {
+            selectRoomList();
             selectPrint(); //
-            System.out.println("1. 전체 객실 조회   2. 최저가 순 조회 3. 최고가 순 조회"); //최저가, 최고가 정렬
+            System.out.println("1. 전체 객실 조회   2. 최저가 순 조회   3. 최고가 순 조회   4.예약날짜 변경"); //최저가, 최고가 정렬
             if(selectSortOption(sc.nextInt())==0) continue;
 
             System.out.println("1. 예약하기 2. 뒤로가기");
@@ -39,17 +59,39 @@ public class Device {
             if(selectedRoom==null) continue;
             else break;
         }
-        //선택한 Room 객체 selectedRoom 이용 예약진행
+        //선택한 Room 객체 selectedRoom과 selectedDate 이용 예약진행
     }
 
+    public void selectRoomList(){
+        reservatedCount=0;
+        rooms = new TreeMap<>(hotel.getRooms()); // rooms에 호텔 전체객실 getRooms() 붙여넣기
+        for(Reservation reservation : reservatedMap.values()){
+            if (selectedDate.isEqual(reservation.getReservationDate())){//선택날짜와 예약된 날짜가 같은경우
+                rooms.remove(reservation.getRoom().getRoomNumber()); // 예약정보 중 객실번호를 가져와 rooms에서 제거
+                reservatedCount++;
+            }
+        }
+    }
     public void selectPrint() {
-        System.out.println("\"스파르타 호텔에 오신 것을 환영합니다!\"");
-        System.out.println(FONT_GREEN + "현재 투숙가능한 객실은 " + FONT_BLUE + rooms.size() + FONT_GREEN + "개 입니다." + FONT_RESET);
+        System.out.println("[객실 조회하기]");
+        System.out.print("예약날짜 : "+selectedDate);
+        int dayOfWeek = selectedDate.getDayOfWeek().getValue();//요일 구하기 1-월 ~ 7-일
+        switch(dayOfWeek){
+            case 1:System.out.println("(월)");break;
+            case 2:System.out.println("(화)");break;
+            case 3:System.out.println("(수)");break;
+            case 4:System.out.println("(목)");break;
+            case 5:System.out.println("(금)");break;
+            case 6:System.out.println("(토)");break;
+            case 7:System.out.println("(일)");break;
+        }
+        System.out.println(FONT_GREEN + "해당날짜의 투숙가능한 객실은 " + FONT_BLUE + rooms.size() + FONT_GREEN + "개 입니다." +FONT_BLUE+"(예약 "+reservatedCount+"명)" + FONT_RESET);
         System.out.println("조회할 방법을 선택하세요.");
 
     }
 
     public int selectSortOption(int input) {//객실조회옵션선택
+        sc.nextLine();
         switch (input) {
             case 1: {  //전체 객실 조회
                 selectAll();
@@ -69,11 +111,40 @@ public class Device {
                 selectAll(sortList);
                 return 1;
             }
+            case 4: {//예약 날짜 변경
+                changeselectedDate();
+                break;
+            }
             default: {
                 System.out.println("잘못된 번호입력입니다.");
             }
         }
         return 0;
+
+    }
+    public void changeselectedDate() {
+        System.out.println("예약하고 싶은 날짜를 입력하세요. (yyyy-mm-dd 형식으로 입력하세요.)");
+        LocalDate date = null;
+        String inputDate = sc.nextLine();
+
+        while (true) {
+            try {
+                date = LocalDate.parse(inputDate, DateTimeFormatter.ISO_DATE);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("잘못된 형식의 날짜입력입니다.");
+                System.out.println("날짜를 다시 입력하세요. (yyyy-mm-dd형식으로 입력하세요.)");
+                inputDate = sc.nextLine();
+//            throw new RuntimeException(e);
+            }
+        }
+        if (date.isBefore(LocalDate.now())) {//입력날짜가 오늘보다 작은 값일 경우
+            System.out.println("지난 날짜는 예약할 수 없습니다.");
+            System.out.println("처음 화면으로 돌아갑니다.");
+        } else {
+            selectedDate = date;
+            System.out.println("예약날짜가 변경되었습니다. 해당 날짜의 예약가능한 객실을 다시 불러옵니다.");
+        }
 
     }
 
