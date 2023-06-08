@@ -13,12 +13,14 @@ public class ReservationContext {
     static List<Reservation> reservation1 =new ArrayList<>();
     static List<Reservation> reservation2 =new ArrayList<>();
     static List<Reservation> reservation3 =new ArrayList<>();
+    static List<Reservation> reservation4 =new ArrayList<>();
 
     static Map<UUID, List<Reservation>> reservationNumberMap = new HashMap<UUID, List<Reservation>>();
     public void ReservationItems(){
         Room roomItme1 = new Room(100,52,1000000);
         Room roomItme2 = new Room(200,88,2000000);
         Room roomItme3 = new Room(300,40,3000000);
+        Room roomItme4 = new Room(400,45,4000000);
         reservation.setReservationDate(LocalDateTime.now());
 
         UUID number1 = reservation.setReservationNumber(UUID.randomUUID());
@@ -30,18 +32,17 @@ public class ReservationContext {
         reservationNumberMap.put(number2,reservation2);
 
         UUID number3=reservation.setReservationNumber(UUID.randomUUID());
-        reservation.setReservationNumber(UUID.randomUUID());
         reservation3.add(new Reservation(roomItme3,"김가나","010-1361-5489",reservation.getReservationDate(),reservation.getReservationNumber()));
         reservationNumberMap.put(number3,reservation3);
 
+        UUID number4=reservation.setReservationNumber(UUID.randomUUID());
+        reservation4.add(new Reservation(roomItme4,"서예린","010-8688-7848",reservation.getReservationDate(),reservation.getReservationNumber()));
+        reservationNumberMap.put(number4,reservation4);
 
 
     }
 
     public static void selectAllReservation(){ //전체 예약리스트 출력
-//        for (int i = 0; i <reservationList.size() ; i++) {
-//            System.out.println("["+(i+1)+"] "+reservationList.get(i));
-//        }
         reservationNumberMap.forEach((key, value) -> {
             System.out.println(value);
         });
@@ -53,14 +54,11 @@ public class ReservationContext {
 
     }
 
-    public void selectReservationUseName(String customerName){ // 고객이름으로 찾는 리스트
+    public void selectReservationUseName(String customerName){ // 고객이름으로 찾는 리스트 (보류)
 
-        System.out.println("예약번호:"+customerName+", 예약정보:"+ reservationNumberMap.get(customerName));
+        System.out.println(reservation3.contains(customerName));
 
     }
-
-
-
 
 
 }

@@ -7,8 +7,8 @@ public class Main {
 
         ReservationContext.selectAllReservation();
         Scanner scanner = new Scanner(System.in);
-        String number = scanner.next();
-        reservationContext.selectReservationUseNumber(UUID.fromString(number));
+        String codeNumber = scanner.next();
+        reservationContext.selectReservationUseNumber(UUID.fromString(codeNumber));
 
     }
 }
