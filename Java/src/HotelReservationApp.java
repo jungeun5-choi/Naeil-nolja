@@ -173,50 +173,6 @@ public class HotelReservationApp {
             if (selectedRoom == null) continue;
             else break;
         }
-//        System.out.println("===============================");
-//        System.out.println("\"스파르타 호텔에 오신 것을 환영합니다!\"");
-//        System.out.println(FONT_GREEN + "현재 투숙가능한 객실은 " + FONT_BLUE + rooms.size() + FONT_GREEN + "개 입니다." + FONT_RESET);
-//        System.out.println("조회할 방법을 선택하세요.");
-//        System.out.println("===============================");
-//        System.out.println("1. 전체 객실 2. 최저가 순 3. 최고가 순 4. 돌아가기"); //최저가, 최고가 정렬 현재 미구현
-//        System.out.print("번호를 입력하세요 : ");
-//        int input = sc.nextInt();
-//        sc.nextLine();
-//        switch (input) {
-//            case 1: {
-//                selectAll();
-//                checkReserve();
-//            }
-//            case 2: {
-//                ArrayList<Room> sortList = new ArrayList<>();
-//                sortList.addAll(rooms.values());
-//                Collections.sort(sortList);
-//                selectAll(sortList);
-//                checkReserve();
-//                break;
-//            }
-//            case 3: {
-//                ArrayList<Room> sortList = new ArrayList<>();
-//                sortList.addAll(rooms.values());
-//                Collections.sort(sortList, Collections.reverseOrder());
-//                selectAll(sortList);
-//                checkReserve();
-//                break;
-//            }
-//            case 4: {
-////                changeselectedDate();
-//                break;
-//            }
-//            case 5: {
-//                customerMode();
-//                break;
-//            }
-//            default: {
-//                System.out.println("잘못된 번호입력입니다.");
-//                selectAll();
-//                break;
-//            }
-//        }
     }
 
     public void selectPrint() {
@@ -324,7 +280,6 @@ public class HotelReservationApp {
                 System.out.println("잘못된 형식의 날짜입력입니다.");
                 System.out.println("날짜를 다시 입력하세요. (yyyy-mm-dd형식으로 입력하세요.)");
                 inputDate = sc.nextLine();
-//            throw new RuntimeException(e);
             }
         }
         if (date.isBefore(LocalDate.now())) {//입력날짜가 오늘보다 작은 값일 경우
@@ -453,7 +408,6 @@ public class HotelReservationApp {
 
     public void myReservation(UUID myUUID) {
         try {
-            sc.nextLine();
             System.out.print("예약번호를 입력하세요 : ");
             UUID id = UUID.fromString(sc.next());
             for (UUID uuid : reservedUUIDList) {
@@ -475,7 +429,6 @@ public class HotelReservationApp {
             UUID id = UUID.fromString(sc.next());
             for (UUID uuid : reservedUUIDList) {
                 if (uuid.equals(id)) {
-                    System.out.println("예약을 취소하시겠습니까?");
                     System.out.println("===============================");
                     printMyReservation(id);
                     System.out.println("===============================");
@@ -483,11 +436,12 @@ public class HotelReservationApp {
                     System.out.print("번호를 입력하세요 : ");
                     int number = sc.nextInt();
                     sc.nextLine();
-                    if (number == 1) {// 예약 내역 삭제
+                    if (number == 1) {
+                        hotel.subtractHotelAsset(reservedRoom.get(id).getRoom().getRoomPrice());
+                        // 예약 내역 삭제
                         reservedRoom.remove(id);
                         // 저장했던 key값도 삭제
                         reservedUUIDList.remove(id);
-                        hotel.subtractHotelAsset(hotel.getAsset());
                         System.out.println("예약이 취소되었습니다.");
                         customerMode();
                     } else if (number == 2) {
