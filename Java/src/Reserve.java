@@ -1,3 +1,5 @@
+package project;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -13,7 +15,8 @@ public class Reserve {
     private LinkedList<UUID> reservedUUIDList = new LinkedList<>();
 
     /* 생성자 */
-    public Reserve() {}
+    public Reserve() {
+    }
     /*
     public Reserve(Reservation reservation) {
         this.reservation = reservation;
@@ -24,10 +27,12 @@ public class Reserve {
     public Room getRoom(UUID myUUID) {
         return reservedRoom.get(myUUID).getRoom();
     }
+
     // 1개의 Reservation에서 LocalDateTime만 호출 - uuid 필요
     public LocalDateTime getLocalDateTime(UUID myUUID) {
         return reservedRoom.get(myUUID).getReservationDate();
     }
+
     // 1개의 Reservation에서 파싱한 날짜:시간 정보 호출 - uuid 필요
     public String getParseDateTime(UUID myUUID) {
 
@@ -35,6 +40,7 @@ public class Reserve {
 
         return parseDateTime;
     }
+
     // 1개의 Reservation에서 파싱한 날짜 정보 호출 - uuid 필요
     public String getParseDate(UUID myUUID) {
 
@@ -42,6 +48,7 @@ public class Reserve {
 
         return parseDate;
     }
+
     // 1개의 Reservation에서 파싱한 시간 정보 호출 - uuid 필요
     public String getParseTime(UUID myUUID) {
 
@@ -54,6 +61,7 @@ public class Reserve {
     public String getCustomerName(UUID myUUID) {
         return reservedRoom.get(myUUID).getCustomerName();
     }
+
     // 1개의 Reservation에서 고객 전화번호만 호출 - uuid 필요
     public String getCustomerPhoneNumber(UUID myUUID) {
         return reservedRoom.get(myUUID).getCustomerPhoneNumber();
@@ -63,6 +71,7 @@ public class Reserve {
     public int getReservedCount() {
         return reservedRoom.size();
     }
+
     // 전체 키 값(uuid)을 호출
     public LinkedList<UUID> getAllReservedUUID() {
         return reservedUUIDList;
@@ -70,7 +79,7 @@ public class Reserve {
 
     /* 메서드 */
     // 1. 예약 생성 - 예약 번호 반환
-    public UUID createReservation(Room room, Customer customer){
+    public UUID createReservation(Room room, Customer customer) {
 
         // UUID 생성
         UUID uuid = UUID.randomUUID();
@@ -79,7 +88,7 @@ public class Reserve {
                 room, customer.getName(), customer.getPhoneNumber(),
                 LocalDateTime.now(), uuid
         );
-        
+
         // 생성한 예약을 추가
         reservedRoom.put(uuid, reservation);
         // list에 생성된 uuid 값 저장
@@ -98,12 +107,13 @@ public class Reserve {
     public Reservation viewMyReservation(UUID myUUID) {
         return reservedRoom.get(myUUID);
     }
+
     // 3-2. 개별 예약 조회 - 출력 형식
     public void printMyReservation(UUID myUUID) {
 
         System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
 
-        System.out.printf("- 예약 번호: %s\n", myUUID.toString());        
+        System.out.printf("- 예약 번호: %s\n", myUUID.toString());
         System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
         // System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID)); -> 날짜만 출력
 
@@ -122,11 +132,29 @@ public class Reserve {
         // 저장했던 key값도 삭제
         reservedUUIDList.remove(myUUID);
     }
+
+    public void cancelReservation() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("예약번호를 입력하세요 : ");
+        System.out.println("취소하시겠습니까?\n" + "1. Yes    2. No ");
+        int input = scanner.nextInt();
+        if (input == 1) {
+            reservedRoom.remove(UUID.randomUUID());
+            System.out.println("예약이 취소되었습니다.");
+            HotelReservationApp();
+        } else if (input == 2) {
+            HotelReservationApp();
+        } else {
+            System.out.println("잘못된 예약번호 입니다. 다시 입력해주세요.");
+            cancelReservation();
+    }
+
+    }
 }
 
 /*
-* 1. 예약 생성 - 예약 번호 반환
-* 2. 전체 예약 목록 조회
-* 3. 개별 예약 목록 조회 (parameter: uuid)
-* 4. 예약 취소 (parameter: uuid)
-* */
+ * 1. 예약 생성 - 예약 번호 반환
+ * 2. 전체 예약 목록 조회
+ * 3. 개별 예약 목록 조회 (parameter: uuid)
+ * 4. 예약 취소 (parameter: uuid)
+ * */
