@@ -5,6 +5,7 @@ import java.util.*;
 
 public class HotelReservationApp {
     Scanner sc;
+
     Customer customer;
     Hotel hotel;
     Reservation reservation;
