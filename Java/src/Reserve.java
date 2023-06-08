@@ -6,7 +6,7 @@ public class Reserve {
 
     /* 필드 */
     private Reservation reservation;
-
+    private Hotel hotel;
     // 예약정보
     private Map<UUID, Reservation> reservedRoom = new HashMap<>();
     // 예약 키 값
@@ -79,12 +79,12 @@ public class Reserve {
                 room, customer.getName(), customer.getPhoneNumber(),
                 LocalDateTime.now(), uuid
         );
-        
         // 생성한 예약을 추가
         reservedRoom.put(uuid, reservation);
         // list에 생성된 uuid 값 저장
         reservedUUIDList.add(uuid);
-
+        hotel.addHotelAsset(customer.getMoney());
+        customer.subtractCustomerMoney(customer.getMoney());
         // uuid 반환
         return uuid;
     }
@@ -103,7 +103,7 @@ public class Reserve {
 
         System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
 
-        System.out.printf("- 예약 번호: %s\n", myUUID.toString());        
+        System.out.printf("- 예약 번호: %s\n", myUUID.toString());
         System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
         // System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID)); -> 날짜만 출력
 

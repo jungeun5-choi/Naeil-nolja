@@ -52,6 +52,6 @@ public class Reservation {
 
     @Override
     public String toString(){
-        return  "객실("+room+")"+","+"고객이름:"+customerName+","+"고객전화번호:"+customerPhoneNumber+","+"예약날짜:"+reservationDate+","+"예약번호:"+reservationNumber;
+        return  "객실("+room+")"+", 고객이름 : "+customerName+", 고객전화번호 : "+customerPhoneNumber+", 예약날짜 : "+reservationDate+", 예약번호 : "+reservationNumber;
     }
 }

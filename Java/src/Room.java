@@ -31,7 +31,7 @@ public class Room implements Comparable<Room>{
 
     @Override
     public String toString() {
-        return "번호:" + roomNumber + "," + "크기" + roomSize + "," + "가격" + roomPrice;
+        return "번호 : " + roomNumber + ", 크기 : " + roomSize + ", 가격 : " + roomPrice;
     }
     public void showIntroduce() {
         System.out.printf("객실 번호 : %-4s | 객실 크기 : %-8s | 가격 : %,7d원\n", getRoomNumber(), getRoomSize(), getRoomPrice());

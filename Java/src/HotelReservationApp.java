@@ -1,17 +1,16 @@
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class HotelReservationApp {
     Scanner sc;
     Customer customer;
-    Device device;
     Hotel hotel;
     Reservation reservation;
-    ReservationContext reservationContext;
-    Reserve reserve;
     Room room;
-    RoomSize roomSize;
 
     private TreeMap<Integer,Room> rooms = new TreeMap<>();
+    private Map<UUID, Reservation> reservedRoom = new HashMap<>();
+    private LinkedList<UUID> reservedUUIDList = new LinkedList<>();
     public static final String FONT_GREEN = "\u001B[32m";
     public static final String FONT_RESET = "\u001B[0m";
     public static final String FONT_BLUE = "\u001B[34m";
@@ -85,11 +84,11 @@ public class HotelReservationApp {
                 reserveRoom();
                 break;
             case 3 : // 예약 조회
-                System.out.print("예약번호를 입력하시오 : ");
                 //uuid 입력 후 맞으면
 //                reserve.viewMyReservation(new UUID());
                 break;
             case 4 : // 예약 취소
+
                 break;
             case 5 : // 모드선택으로 돌아가기
                 selectModeInput();
@@ -105,14 +104,15 @@ public class HotelReservationApp {
         System.out.println("\"스파르타 호텔에 오신 것을 환영합니다!\"");
         System.out.println(FONT_GREEN+"현재 투숙가능한 객실은 "+FONT_BLUE+rooms.size()+FONT_GREEN+"개 입니다."+FONT_RESET);
         System.out.println("조회할 방법을 선택하세요.");
-        System.out.println("1. 전체 객실 2. 최저가 순 3. 최고가 순"); //최저가, 최고가 정렬 현재 미구현
+        System.out.println("1. 전체 객실 2. 최저가 순 3. 최고가 순 4. 돌아가기"); //최저가, 최고가 정렬 현재 미구현
         System.out.println("===============================");
+        System.out.print("번호를 입력 하시오 : ");
         int input = sc.nextInt();
         sc.nextLine();
         switch (input) {
             case 1: {
                 selectAll();
-                break;
+                showRoom();
             }
             case 2: {
 //                    hotel.sortCheap(); 리스트에서
@@ -122,6 +122,10 @@ public class HotelReservationApp {
             case 3: {
 //                    hotel.sortExpansive();
                 selectAll();
+                break;
+            }
+            case 4: {
+                customerMode();
                 break;
             }
             default:{
@@ -154,26 +158,67 @@ public class HotelReservationApp {
         String phoneNumber = enterPhoneNumberInput();
         System.out.print("소지금을 입력하시오 : ");
         int money = enterMoneyInput();
-        Customer customer = new Customer(name, phoneNumber, money);
         System.out.println("===============================");
         selectAll();
-        System.out.println("객실을 선택하시오 : ");
+        System.out.println("===============================");
+        System.out.print("객실을 선택하시오 : ");
         int roomNumber = sc.nextInt();
-        reserve.createReservation(hotel.getRoom(roomNumber), customer);
-        System.out.println(hotel.getRoom(roomNumber)+"예약 하시겠습니까?");
+        System.out.println("예약이 완료되었습니다.");
+        System.out.println(name+" 님의 id는 "+createReservation(rooms.get(roomNumber), new Customer(name, phoneNumber, money))+" 입니다. ");
+        hotel.addHotelAsset(rooms.get(roomNumber).getRoomPrice());
+        customer.subtractCustomerMoney(rooms.get(roomNumber).getRoomPrice());
+        customerMode();
+//        if(room.compareTo(rooms.get(roomNumber)) > 0){
+//            System.out.println("예약이 완료되었습니다.");
+//            System.out.println(name+"님의 id는 "+createReservation(rooms.get(roomNumber), new Customer(name, phoneNumber, money))+" 입니다.");
+//            customerMode();
+//        } else if (room.compareTo(rooms.get(roomNumber)) < 0){
+//            System.out.println("소지금이 부족합니다.");
+//            reserveRoom();
+//        } 소지금 비교 후 예약
+    }
+    // 예약 생성 및 리스트 저장
+    public UUID createReservation(Room room, Customer customer){
+
+        // UUID 생성
+        UUID uuid = UUID.randomUUID();
+        // 예약 생성
+        Reservation reservation = new Reservation(
+                room, customer.getName(), customer.getPhoneNumber(),
+                LocalDateTime.now(), uuid
+        );
+        // 생성한 예약을 추가
+        reservedRoom.put(uuid, reservation);
+        // list에 생성된 uuid 값 저장
+        reservedUUIDList.add(uuid);
+        hotel.addHotelAsset(customer.getMoney());
+        customer.subtractCustomerMoney(customer.getMoney());
+        // uuid 반환
+        return uuid;
     }
 
     // 1-3. 객실 예약조회
-
+    public Reservation viewMyReservation(UUID myUUID) {
+        return reservedRoom.get(myUUID);
+    }
+    public void myReserve(UUID myUUID){
+        System.out.print("예약번호를 입력하시오 : ");
+        String id = sc.next();
+//        if(id.equals(reservedUUIDList.get))
+    }
     // 1-4. 객실 예약취소
-
+    public void cancelMyReservation(UUID myUUID) {
+        // 예약 내역 삭제
+        reservedRoom.remove(myUUID);
+        // 저장했던 key값도 삭제
+        reservedUUIDList.remove(myUUID);
+    }
     // 2. 호텔 모드
     public void hotelMode(){
-        System.out.print("\n");
-        System.out.println("관리자 비밀번호를 입력하세요.");
+//        System.out.print("\n");
+//        System.out.println("관리자 비밀번호를 입력하세요.");
         // 비밀번호가 같다면 관리자모드로 진입
         System.out.print("\n");
-        device.selectAll();
         System.out.println("===============================");
         System.out.printf("%-8s %-8s %s\n","1. 보유자산", "2. 예약목록", "3. 돌아가기");
         System.out.println("===============================");
@@ -184,7 +229,7 @@ public class HotelReservationApp {
                 hotelAsset();
                 break;
             case 2 : // 예약목록 조회
-                reserve.viewAllReservation();
+                viewReservedRoom();
                 break;
             case 3 : // 돌아가기
                 selectModeInput();
@@ -194,9 +239,10 @@ public class HotelReservationApp {
 
     // 2-1 보유자산 조회
     public void hotelAsset(){
+        inputHotel();
         System.out.print("\n");
         System.out.println("===============================");
-        System.out.println("스파르타 호텔의 총 자산은 : " + hotel.getAsset() + " 입니다.");
+        System.out.println("호텔의 총 자산은 : " + hotel.getAsset() + " 입니다.");
         System.out.println("===============================");
         System.out.printf("%-10s %-10s\n","1. 돌아가기", "2. 종료");
         System.out.print("번호를 입력 하시오 : ");
@@ -211,6 +257,11 @@ public class HotelReservationApp {
         }
     }
     // 2-2 예약목록 조회
-
+    public void viewReservedRoom(){
+        for(Map.Entry<UUID, Reservation> entrySet : reservedRoom.entrySet()){
+            System.out.println(entrySet.getValue());
+        }
+        hotelMode();
+    }
     // 2-3 남은 객실 조회?
 }

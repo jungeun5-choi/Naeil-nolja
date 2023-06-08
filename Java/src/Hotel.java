@@ -14,7 +14,6 @@ public class Hotel {
         this.rooms = rooms;
         this.asset = asset;
 //        this.reservationNumber = reservationNumber;
-
     }
 
     /* getter */
