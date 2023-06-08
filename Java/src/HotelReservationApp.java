@@ -32,7 +32,7 @@ public class HotelReservationApp {
         rooms.put(402,new Room(402, RoomSize.Family, 110000));
         rooms.put(502,new Room(502, RoomSize.Suite, 150000));
 
-        hotel = new Hotel("스파르타 호텔", rooms, 0);
+        hotel = new Hotel("스파르타 호텔", rooms, hotel.getAsset());
     }
     /* 메서드 */
 
@@ -112,16 +112,18 @@ public class HotelReservationApp {
         switch (input) {
             case 1: {
                 selectAll();
-                showRoom();
+                checkReserve();
             }
             case 2: {
 //                    hotel.sortCheap(); 리스트에서
-                selectAll();
+//                selectAll();
+                checkReserve();
                 break;
             }
             case 3: {
 //                    hotel.sortExpansive();
-                selectAll();
+//                selectAll();
+                checkReserve();
                 break;
             }
             case 4: {
@@ -137,6 +139,21 @@ public class HotelReservationApp {
     }
     public void selectAll() {
         hotel.showRooms();
+    }
+    public void checkReserve(){
+        System.out.println("===============================");
+        System.out.printf("%-10s %-10s\n","1. 예약하기", "2. 돌아가기");
+        System.out.println("===============================");
+        System.out.print("번호를 입력하시오 : ");
+        int number = sc.nextInt();
+        switch(number){
+            case 1 : // 예약하기
+                reserveRoom();
+                break;
+            case 2 : // 돌아가기
+                customerMode();
+                break;
+        }
     }
     // 1-2-1. 이름, 번호, 소지금 입력
     public String enterNameInput(){
@@ -158,6 +175,7 @@ public class HotelReservationApp {
         String phoneNumber = enterPhoneNumberInput();
         System.out.print("소지금을 입력하시오 : ");
         int money = enterMoneyInput();
+//        new Customer(name,phoneNumber,money);
         System.out.println("===============================");
         selectAll();
         System.out.println("===============================");
@@ -166,7 +184,10 @@ public class HotelReservationApp {
         System.out.println("예약이 완료되었습니다.");
         System.out.println(name+" 님의 id는 "+createReservation(rooms.get(roomNumber), new Customer(name, phoneNumber, money))+" 입니다. ");
         hotel.addHotelAsset(rooms.get(roomNumber).getRoomPrice());
-        customer.subtractCustomerMoney(rooms.get(roomNumber).getRoomPrice());
+//        customer.subtractCustomerMoney(rooms.get(roomNumber).getRoomPrice());
+        System.out.println(hotel.getAsset());
+        System.out.println(customer.getMoney());
+//        System.out.println(name+" 님의 소지금은 "+customer.getMoney()+"원 남았습니다.");
         customerMode();
 //        if(room.compareTo(rooms.get(roomNumber)) > 0){
 //            System.out.println("예약이 완료되었습니다.");
@@ -177,7 +198,7 @@ public class HotelReservationApp {
 //            reserveRoom();
 //        } 소지금 비교 후 예약
     }
-    // 예약 생성 및 리스트 저장
+    // 1-2-1. 예약 생성 및 리스트 저장
     public UUID createReservation(Room room, Customer customer){
 
         // UUID 생성
@@ -191,8 +212,6 @@ public class HotelReservationApp {
         reservedRoom.put(uuid, reservation);
         // list에 생성된 uuid 값 저장
         reservedUUIDList.add(uuid);
-        hotel.addHotelAsset(customer.getMoney());
-        customer.subtractCustomerMoney(customer.getMoney());
         // uuid 반환
         return uuid;
     }
@@ -239,10 +258,9 @@ public class HotelReservationApp {
 
     // 2-1 보유자산 조회
     public void hotelAsset(){
-        inputHotel();
         System.out.print("\n");
         System.out.println("===============================");
-        System.out.println("호텔의 총 자산은 : " + hotel.getAsset() + " 입니다.");
+        System.out.println("호텔의 총 자산은 : " + hotel.getAsset() + " 원 입니다.");
         System.out.println("===============================");
         System.out.printf("%-10s %-10s\n","1. 돌아가기", "2. 종료");
         System.out.print("번호를 입력 하시오 : ");
