@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class HotelReservationApp {
@@ -34,6 +35,54 @@ public class HotelReservationApp {
 
         hotel = new Hotel("스파르타 호텔", rooms, hotel.getAsset());
     }
+    /* getter */
+    // 1개의 Reservation에서 room 정보만 호출 - uuid 필요
+    public Room getRoom(UUID myUUID) {
+        return reservedRoom.get(myUUID).getRoom();
+    }
+    // 1개의 Reservation에서 LocalDateTime만 호출 - uuid 필요
+    public LocalDateTime getLocalDateTime(UUID myUUID) {
+        return reservedRoom.get(myUUID).getReservationDate();
+    }
+    // 1개의 Reservation에서 파싱한 날짜:시간 정보 호출 - uuid 필요
+    public String getParseDateTime(UUID myUUID) {
+
+        String parseDateTime = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        return parseDateTime;
+    }
+    // 1개의 Reservation에서 파싱한 날짜 정보 호출 - uuid 필요
+    public String getParseDate(UUID myUUID) {
+
+        String parseDate = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return parseDate;
+    }
+    // 1개의 Reservation에서 파싱한 시간 정보 호출 - uuid 필요
+    public String getParseTime(UUID myUUID) {
+
+        String parseTime = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        return parseTime;
+    }
+
+    // 1개의 Reservation에서 고객 이름 정보만 호출 - uuid 필요
+    public String getCustomerName(UUID myUUID) {
+        return reservedRoom.get(myUUID).getCustomerName();
+    }
+    // 1개의 Reservation에서 고객 전화번호만 호출 - uuid 필요
+    public String getCustomerPhoneNumber(UUID myUUID) {
+        return reservedRoom.get(myUUID).getCustomerPhoneNumber();
+    }
+
+    // 전체 예약 개수를 호출
+    public int getReservedCount() {
+        return reservedRoom.size();
+    }
+    // 전체 키 값(uuid)을 호출
+    public LinkedList<UUID> getAllReservedUUID() {
+        return reservedUUIDList;
+    }
     /* 메서드 */
 
     // 최초 진입점
@@ -48,7 +97,7 @@ public class HotelReservationApp {
         System.out.println("==========스파르타 호텔==========");
         System.out.printf("%-10s %-10s %s\n","1. 고객", "2. 호텔","3. 종료");
         System.out.println("===============================");
-        System.out.print("번호를 입력 하시오 : ");
+        System.out.print("번호를 입력 하세요 : ");
         int selectMode = sc.nextInt();
         switch(selectMode){
             case 1 : // 고객모드
@@ -74,7 +123,7 @@ public class HotelReservationApp {
         System.out.println("4. 예약 취소");
         System.out.println("5. 돌아 가기");
         System.out.println("===============================");
-        System.out.print("번호를 입력 하시오 : ");
+        System.out.print("번호를 입력하세요 : ");
         int selectMenu = sc.nextInt();
         switch(selectMenu){
             case 1 : // 객실 조회
@@ -83,12 +132,11 @@ public class HotelReservationApp {
             case 2 : // 예약 하기
                 reserveRoom();
                 break;
-            case 3 : // 예약 조회
-                //uuid 입력 후 맞으면
-//                reserve.viewMyReservation(new UUID());
+            case 3 :
+                myReservation(reservation.getReservationNumber());
                 break;
             case 4 : // 예약 취소
-
+                cancelMyReservation(reservation.getReservationNumber());
                 break;
             case 5 : // 모드선택으로 돌아가기
                 selectModeInput();
@@ -106,7 +154,7 @@ public class HotelReservationApp {
         System.out.println("조회할 방법을 선택하세요.");
         System.out.println("1. 전체 객실 2. 최저가 순 3. 최고가 순 4. 돌아가기"); //최저가, 최고가 정렬 현재 미구현
         System.out.println("===============================");
-        System.out.print("번호를 입력 하시오 : ");
+        System.out.print("번호를 입력하세요 : ");
         int input = sc.nextInt();
         sc.nextLine();
         switch (input) {
@@ -144,7 +192,7 @@ public class HotelReservationApp {
         System.out.println("===============================");
         System.out.printf("%-10s %-10s\n","1. 예약하기", "2. 돌아가기");
         System.out.println("===============================");
-        System.out.print("번호를 입력하시오 : ");
+        System.out.print("번호를 입력하세요 : ");
         int number = sc.nextInt();
         switch(number){
             case 1 : // 예약하기
@@ -169,17 +217,17 @@ public class HotelReservationApp {
     // 1-2. 객실 예약하기
     public void reserveRoom(){
         inputHotel();
-        System.out.print("이름을 입력하시오 : ");
+        System.out.print("이름을 입력하세요 : ");
         String name = enterNameInput();
-        System.out.print("번호를 입력하시오 : ");
+        System.out.print("번호를 입력하세요 : ");
         String phoneNumber = enterPhoneNumberInput();
-        System.out.print("소지금을 입력하시오 : ");
+        System.out.print("소지금을 입력하세요 : ");
         int money = enterMoneyInput();
         Customer customer = new Customer(name, phoneNumber, money);
         System.out.println("===============================");
         selectAll();
         System.out.println("===============================");
-        System.out.print("객실을 선택하시오 : ");
+        System.out.print("객실을 선택하세요 : ");
         int roomNumber = sc.nextInt();
         if(customer.getMoney() >= rooms.get(roomNumber).getRoomPrice()){
             System.out.println("예약이 완료되었습니다.");
@@ -211,21 +259,60 @@ public class HotelReservationApp {
         return uuid;
     }
 
-    // 1-3. 객실 예약조회
-    public Reservation viewMyReservation(UUID myUUID) {
-        return reservedRoom.get(myUUID);
+    // 1-3. 개인 예약조회
+    public void printMyReservation(UUID myUUID) {
+
+        System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
+
+        System.out.printf("- 예약 번호: %s\n", myUUID.toString());
+        System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
+        // System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID)); -> 날짜만 출력
+
+        System.out.printf("- 예약자: %s 님\n", getCustomerName(myUUID));
+        System.out.printf("- 예약자 전화번호: %s\n\n", getCustomerPhoneNumber(myUUID));
+
+        System.out.printf("- 예약 객실 번호: %s\n", getRoom(myUUID).getRoomNumber());
+        System.out.printf("- 예약 객실 크기: %s\n", getRoom(myUUID).getRoomSize());
+        System.out.printf("- 예약 객실 가격: %s 원\n", getRoom(myUUID).getRoomPrice());
     }
-    public void myReserve(UUID myUUID){
-        System.out.print("예약번호를 입력하시오 : ");
-        String id = sc.next();
-//        if(id.equals(reservedUUIDList.get))
+    public void myReservation(UUID myUUID){
+        try{
+            System.out.print("예약번호를 입력하세요 : ");
+            UUID id = UUID.fromString(sc.next());
+            for (UUID uuid : reservedUUIDList) {
+                if (uuid.equals(id)) {
+                    printMyReservation(id);
+                    customerMode();
+                } else{
+                    System.out.println("예약내역이 존재하지 않습니다.");
+                    customerMode();
+                }
+            }
+        } catch (IllegalArgumentException e){
+            System.out.println("잘못된 id 입니다.");
+            customerMode();
+        }
     }
     // 1-4. 객실 예약취소
     public void cancelMyReservation(UUID myUUID) {
-        // 예약 내역 삭제
-        reservedRoom.remove(myUUID);
-        // 저장했던 key값도 삭제
-        reservedUUIDList.remove(myUUID);
+        try{
+            System.out.print("예약번호를 입력하세요 : ");
+            UUID id = UUID.fromString(sc.next());
+            for (UUID uuid : reservedUUIDList) {
+                if (uuid.equals(id)) {
+                    // 예약 내역 삭제
+                    reservedRoom.remove(id);
+                    // 저장했던 key값도 삭제
+                    reservedUUIDList.remove(id);
+                    hotel.subtractHotelAsset(hotel.getAsset());
+                    System.out.println("예약이 취소되었습니다.");
+                    customerMode();
+                }
+            }
+        } catch (IllegalArgumentException e){
+            System.out.println("잘못된 id 입니다.");
+            customerMode();
+        }
     }
     // 2. 호텔 모드
     public void hotelMode(){
@@ -236,7 +323,7 @@ public class HotelReservationApp {
         System.out.println("===============================");
         System.out.printf("%-8s %-8s %s\n","1. 보유자산", "2. 예약목록", "3. 돌아가기");
         System.out.println("===============================");
-        System.out.print("번호를 입력 하시오 : ");
+        System.out.print("번호를 입력하세요 : ");
         int selectMenu = sc.nextInt();
         switch(selectMenu){
             case 1 : // 보유자산 조회
@@ -258,7 +345,7 @@ public class HotelReservationApp {
         System.out.println("호텔의 총 자산은 : " + hotel.getAsset() + " 원 입니다.");
         System.out.println("===============================");
         System.out.printf("%-10s %-10s\n","1. 돌아가기", "2. 종료");
-        System.out.print("번호를 입력 하시오 : ");
+        System.out.print("번호를 입력하세요 : ");
         int selectMenu = sc.nextInt();
         switch(selectMenu){
             case 1 : // 돌아가기
