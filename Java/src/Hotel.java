@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Hotel {
-
+    HotelReservationApp hotelReservationApp;
     private String hotelName; // 호텔 이름
     private TreeMap<Integer,Room> rooms = new TreeMap<>(); // 객실 여러개
     private int asset; // 보유 자산
