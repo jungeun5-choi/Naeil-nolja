@@ -5,7 +5,9 @@ public class Customer {
     private int money; // 소지금
 
     /* 생성자 */
-    Customer(){}
+    Customer() {
+    }
+
     public Customer(String name, String phoneNumber, int money) {
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -27,8 +29,8 @@ public class Customer {
     }
 
     @Override
-    public String toString(){
-        return  name+","+phoneNumber+","+money;
+    public String toString() {
+        return name + "," + phoneNumber + "," + money;
     }
 
     /* setter */
@@ -36,6 +38,7 @@ public class Customer {
     public void addCustomerMoney(int money) {
         this.money += money;
     }
+
     // 자산 빼기
     public void subtractCustomerMoney(int money) {
         this.money -= money;

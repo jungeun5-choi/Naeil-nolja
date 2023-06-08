@@ -1,4 +1,5 @@
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -15,6 +16,7 @@ public class HotelReservationApp {
     public static final String FONT_GREEN = "\u001B[32m";
     public static final String FONT_RESET = "\u001B[0m";
     public static final String FONT_BLUE = "\u001B[34m";
+    ZoneOffset seoul = ZoneOffset.of("+09:00");
 
     public HotelReservationApp(Scanner sc, Hotel hotel, Room room, Reservation reservation, Customer customer) {
         this.sc = sc;
@@ -44,14 +46,15 @@ public class HotelReservationApp {
     }
 
     // 1개의 Reservation에서 LocalDateTime만 호출 - uuid 필요
-    public LocalDateTime getLocalDateTime(UUID myUUID) {
+    public ZonedDateTime getZonedDateTime(UUID myUUID) {
         return reservedRoom.get(myUUID).getReservationDate();
     }
 
     // 1개의 Reservation에서 파싱한 날짜:시간 정보 호출 - uuid 필요
     public String getParseDateTime(UUID myUUID) {
 
-        String parseDateTime = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        String parseDateTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); 1234-56-78 12:34:56 형태변환
+        String parseDateTime = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
 
         return parseDateTime;
     }
@@ -59,15 +62,15 @@ public class HotelReservationApp {
     // 1개의 Reservation에서 파싱한 날짜 정보 호출 - uuid 필요
     public String getParseDate(UUID myUUID) {
 
-        String parseDate = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+//        String parseDate = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 1234-56-78 형태변환
+        String parseDate = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
         return parseDate;
     }
 
     // 1개의 Reservation에서 파싱한 시간 정보 호출 - uuid 필요
     public String getParseTime(UUID myUUID) {
 
-        String parseTime = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        String parseTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         return parseTime;
     }
@@ -262,7 +265,7 @@ public class HotelReservationApp {
         // 예약 생성
         Reservation reservation = new Reservation(
                 room, customer.getName(), customer.getPhoneNumber(),
-                LocalDateTime.now(), uuid
+                ZonedDateTime.now(seoul).withNano(0), uuid
         );
         // 생성한 예약을 추가
         reservedRoom.put(uuid, reservation);
@@ -291,14 +294,12 @@ public class HotelReservationApp {
 
     public void myReservation(UUID myUUID) {
         try {
+            sc.nextLine();
             System.out.print("예약번호를 입력하세요 : ");
             UUID id = UUID.fromString(sc.next());
             for (UUID uuid : reservedUUIDList) {
                 if (uuid.equals(id)) {
                     printMyReservation(id);
-                    customerMode();
-                } else {
-                    System.out.println("예약내역이 존재하지 않습니다.");
                     customerMode();
                 }
             }

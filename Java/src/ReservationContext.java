@@ -1,4 +1,4 @@
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class ReservationContext {
@@ -26,7 +26,7 @@ public class ReservationContext {
         Room roomItme3 = new Room(103, RoomSize.Twin, 3000000);
         Room roomItem4 = new Room(104, RoomSize.Family, 400000);
         Room roomItem5 = new Room(105, RoomSize.Suite, 500000);
-        reservation.setReservationDate(LocalDateTime.now());
+        reservation.setReservationDate(ZonedDateTime.now());
 
         UUID number1 = reservation.setReservationNumber(UUID.randomUUID());
         reservation1.add(new Reservation(roomItme1, "서예린", "010-1234-1234", reservation.getReservationDate(), reservation.getReservationNumber()));

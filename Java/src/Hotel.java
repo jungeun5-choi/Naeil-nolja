@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class Hotel {
-    private int password = 12345;
     private String hotelName; // 호텔 이름
 
     private TreeMap<Integer, Room> rooms = new TreeMap<>(); // 객실 여러개
@@ -29,7 +28,7 @@ public class Hotel {
     }
 
     public int getPassword() {
-        return password;
+        return 12345;
     }
 
     public TreeMap<Integer, Room> getRooms() { // 객실 전체

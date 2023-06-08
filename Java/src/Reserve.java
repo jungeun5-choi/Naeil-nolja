@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -25,7 +26,7 @@ public class Reserve {
         return reservedRoom.get(myUUID).getRoom();
     }
     // 1개의 Reservation에서 LocalDateTime만 호출 - uuid 필요
-    public LocalDateTime getLocalDateTime(UUID myUUID) {
+    public ZonedDateTime getLocalDateTime(UUID myUUID) {
         return reservedRoom.get(myUUID).getReservationDate();
     }
     // 1개의 Reservation에서 파싱한 날짜:시간 정보 호출 - uuid 필요
@@ -77,7 +78,7 @@ public class Reserve {
         // 예약 생성
         Reservation reservation = new Reservation(
                 room, customer.getName(), customer.getPhoneNumber(),
-                LocalDateTime.now(), uuid
+                ZonedDateTime.now(), uuid
         );
         // 생성한 예약을 추가
         reservedRoom.put(uuid, reservation);
