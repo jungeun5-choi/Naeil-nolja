@@ -1,4 +1,4 @@
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.UUID;
 
 public class Reservation {
@@ -7,7 +7,7 @@ public class Reservation {
     private String customerPhoneNumber; // 고객 전화번호
     private ZonedDateTime reservationDate; // 예약날짜
     private UUID reservationNumber; // 예약번호 (uuid)
-
+    private LocalDate date;
     /* 생성자 */
     Reservation() {
     }
@@ -35,6 +35,11 @@ public class Reservation {
 
     public ZonedDateTime getReservationDate() {
         return reservationDate;
+    }
+
+    public LocalDate getDate(){
+        date = reservationDate.toLocalDate();
+        return date;
     }
 
     public UUID getReservationNumber() {

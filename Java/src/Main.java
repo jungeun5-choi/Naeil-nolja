@@ -10,10 +10,10 @@ public class Main {
         Room room = new Room();
         HotelReservationApp app = new HotelReservationApp(sc, hotel, room, reservation, customer);
 
-        ZoneOffset seoul = ZoneOffset.of("+09:00");
-        System.out.println(ZonedDateTime.now(seoul).withNano(0));
-
         app.startApp();
 
+//        Device device = new Device();
+//        device.inputHotel();
+//        device.display();
     }
 }
