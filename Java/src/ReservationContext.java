@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -10,33 +11,29 @@ public class ReservationContext {
         ReservationItems();
     }
     static List<Reservation> reservationList =new ArrayList<>(); //전체 예약목록
-    static List<Reservation> reservation1 =new ArrayList<>();
-    static List<Reservation> reservation2 =new ArrayList<>();
-    static List<Reservation> reservation3 =new ArrayList<>();
-    static List<Reservation> reservation4 =new ArrayList<>();
-
-    static Map<UUID, List<Reservation>> reservationNumberMap = new HashMap<UUID, List<Reservation>>();
+    static Map<UUID, Reservation> reservationNumberMap = new HashMap<UUID, Reservation>();
     public void ReservationItems(){
         Room roomItme1 = new Room(100,RoomSize.Standard,1000000);
         Room roomItme2 = new Room(200,RoomSize.Twin,2000000);
         Room roomItme3 = new Room(300,RoomSize.Suite,3000000);
         Room roomItme4 = new Room(400,RoomSize.Family,4000000);
-        reservation.setReservationDate(LocalDateTime.now());
+        reservation.setReservationDate(LocalDate.now());
 
         UUID number1 = reservation.setReservationNumber(UUID.randomUUID());
-        reservation1.add(new Reservation(roomItme1,"서예린","010-1234-1234",reservation.getReservationDate(),reservation.getReservationNumber()));
+        Reservation reservation1 = new Reservation(roomItme1,"서예린","010-1234-1234",reservation.getReservationDate(),reservation.getReservationNumber());
+
         reservationNumberMap.put(number1,reservation1);
 
         UUID number2=reservation.setReservationNumber(UUID.randomUUID());
-        reservation2.add(new Reservation(roomItme2,"홍길동","010-5481-8618",reservation.getReservationDate(),reservation.getReservationNumber()));
+        Reservation reservation2 =new Reservation(roomItme2,"홍길동","010-5481-8618",reservation.getReservationDate(),reservation.getReservationNumber());
         reservationNumberMap.put(number2,reservation2);
 
         UUID number3=reservation.setReservationNumber(UUID.randomUUID());
-        reservation3.add(new Reservation(roomItme3,"김가나","010-1361-5489",reservation.getReservationDate(),reservation.getReservationNumber()));
+        Reservation reservation3 = new Reservation(roomItme3,"김가나","010-1361-5489",reservation.getReservationDate(),reservation.getReservationNumber());
         reservationNumberMap.put(number3,reservation3);
 
         UUID number4=reservation.setReservationNumber(UUID.randomUUID());
-        reservation4.add(new Reservation(roomItme4,"서예린","010-8688-7848",reservation.getReservationDate(),reservation.getReservationNumber()));
+        Reservation reservation4 = new Reservation(roomItme4,"서예린","010-8688-7848",reservation.getReservationDate(),reservation.getReservationNumber());
         reservationNumberMap.put(number4,reservation4);
 
 
@@ -56,9 +53,13 @@ public class ReservationContext {
 
     public void selectReservationUseName(String customerName){ // 고객이름으로 찾는 리스트 (보류)
 
-        System.out.println(reservation3.contains(customerName));
+//        System.out.println(reservation3.contains(customerName));
 
     }
-
+    public void selectReservationRooms(){
+        for(Reservation reservation :reservationNumberMap.values()){
+            System.out.println(reservation.getRoom());
+        }
+    }
 
 }

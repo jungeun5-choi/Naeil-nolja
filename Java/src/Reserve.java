@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -25,30 +26,30 @@ public class Reserve {
         return reservedRoom.get(myUUID).getRoom();
     }
     // 1개의 Reservation에서 LocalDateTime만 호출 - uuid 필요
-    public LocalDateTime getLocalDateTime(UUID myUUID) {
+    public LocalDate getLocalDate(UUID myUUID) {
         return reservedRoom.get(myUUID).getReservationDate();
     }
     // 1개의 Reservation에서 파싱한 날짜:시간 정보 호출 - uuid 필요
     public String getParseDateTime(UUID myUUID) {
 
-        String parseDateTime = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String parseDateTime = getLocalDate(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         return parseDateTime;
     }
     // 1개의 Reservation에서 파싱한 날짜 정보 호출 - uuid 필요
-    public String getParseDate(UUID myUUID) {
-
-        String parseDate = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-        return parseDate;
-    }
-    // 1개의 Reservation에서 파싱한 시간 정보 호출 - uuid 필요
-    public String getParseTime(UUID myUUID) {
-
-        String parseTime = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-
-        return parseTime;
-    }
+//    public String getParseDate(UUID myUUID) {
+//
+//        String parseDate = getLocalDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//
+//        return parseDate;
+//    }
+//    // 1개의 Reservation에서 파싱한 시간 정보 호출 - uuid 필요
+//    public String getParseTime(UUID myUUID) {
+//
+//        String parseTime = getLocalDate(myUUID).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+//
+//        return parseTime;
+//    }
 
     // 1개의 Reservation에서 고객 이름 정보만 호출 - uuid 필요
     public String getCustomerName(UUID myUUID) {
@@ -77,7 +78,7 @@ public class Reserve {
         // 예약 생성
         Reservation reservation = new Reservation(
                 room, customer.getName(), customer.getPhoneNumber(),
-                LocalDateTime.now(), uuid
+                LocalDate.now(), uuid
         );
         
         // 생성한 예약을 추가
@@ -104,7 +105,7 @@ public class Reserve {
         System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
 
         System.out.printf("- 예약 번호: %s\n", myUUID.toString());        
-        System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
+//        System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID));
         // System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID)); -> 날짜만 출력
 
         System.out.printf("- 예약자: %s 님\n", getCustomerName(myUUID));
