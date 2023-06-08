@@ -24,12 +24,11 @@ public class Device {
     }
 
     public void showRoomList() {
-        int again;
         Room selectedRoom;
 
         while (true) {
             selectPrint(); //
-            System.out.println("1. 전체 객실 조회   2. 최저가 순 조회 3. 최고가 순 조회"); //최저가, 최고가 정렬
+            System.out.println("1. 전체 객실 조회   2. 최저가 순 조회   3. 최고가 순 조회"); //최저가, 최고가 정렬
             if(selectSortOption(sc.nextInt())==0) continue;
 
             System.out.println("1. 예약하기 2. 뒤로가기");
@@ -43,7 +42,7 @@ public class Device {
     }
 
     public void selectPrint() {
-        System.out.println("\"스파르타 호텔에 오신 것을 환영합니다!\"");
+        System.out.println("객실 조회하기");
         System.out.println(FONT_GREEN + "현재 투숙가능한 객실은 " + FONT_BLUE + rooms.size() + FONT_GREEN + "개 입니다." + FONT_RESET);
         System.out.println("조회할 방법을 선택하세요.");
 
