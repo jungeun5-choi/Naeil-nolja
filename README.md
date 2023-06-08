@@ -28,7 +28,10 @@
 </div>
 
 ## 주요 기능 소개
-> ✅ <br>
+> ✅ 예약 가능한 객실 조회<br>
+> ✅ 객실 예약 <br>
+> ✅ 객실 예약 취소 <br>
+> ✅ 예약 내역 조회 <br>
 
 ## 페이지 스크린샷
 
@@ -44,6 +47,7 @@
 > 🤝 스파르타코딩클럽 [내일배움캠프](https://nbcamp.spartacodingclub.kr/) 소속 매니저 및 튜터분들이 진행에 도움을 주셨습니다<br>
 > 
 > 🤝 `README` templates from [README-cheetsheet](https://github.com/ritaly/README-cheatsheet)
+> 🤝 `.gitignore` from [gitignore.io](gitignore.io)
 
 
 ## Contact
