@@ -299,7 +299,10 @@ public class HotelReservationApp {
     }
 
     public void selectAll() {
-        hotel.showRooms();
+        System.out.println(" 객실 정보 :");
+        for (Room room : rooms.values()) {
+            room.showIntroduce();
+        }
     }
 
     public void selectAll(ArrayList<Room> rooms) { //정렬한 객실정보 보여주기용
