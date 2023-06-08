@@ -17,10 +17,10 @@ public class ReservationContext {
 
     static Map<UUID, List<Reservation>> reservationNumberMap = new HashMap<UUID, List<Reservation>>();
     public void ReservationItems(){
-        Room roomItme1 = new Room(100,52,1000000);
-        Room roomItme2 = new Room(200,88,2000000);
-        Room roomItme3 = new Room(300,40,3000000);
-        Room roomItme4 = new Room(400,45,4000000);
+        Room roomItme1 = new Room(100,RoomSize.Standard,1000000);
+        Room roomItme2 = new Room(200,RoomSize.Twin,2000000);
+        Room roomItme3 = new Room(300,RoomSize.Suite,3000000);
+        Room roomItme4 = new Room(400,RoomSize.Family,4000000);
         reservation.setReservationDate(LocalDateTime.now());
 
         UUID number1 = reservation.setReservationNumber(UUID.randomUUID());
