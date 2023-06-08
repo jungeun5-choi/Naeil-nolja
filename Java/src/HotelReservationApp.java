@@ -175,28 +175,23 @@ public class HotelReservationApp {
         String phoneNumber = enterPhoneNumberInput();
         System.out.print("소지금을 입력하시오 : ");
         int money = enterMoneyInput();
-//        new Customer(name,phoneNumber,money);
+        Customer customer = new Customer(name, phoneNumber, money);
         System.out.println("===============================");
         selectAll();
         System.out.println("===============================");
         System.out.print("객실을 선택하시오 : ");
         int roomNumber = sc.nextInt();
-        System.out.println("예약이 완료되었습니다.");
-        System.out.println(name+" 님의 id는 "+createReservation(rooms.get(roomNumber), new Customer(name, phoneNumber, money))+" 입니다. ");
-        hotel.addHotelAsset(rooms.get(roomNumber).getRoomPrice());
-//        customer.subtractCustomerMoney(rooms.get(roomNumber).getRoomPrice());
-        System.out.println(hotel.getAsset());
-        System.out.println(customer.getMoney());
-//        System.out.println(name+" 님의 소지금은 "+customer.getMoney()+"원 남았습니다.");
-        customerMode();
-//        if(room.compareTo(rooms.get(roomNumber)) > 0){
-//            System.out.println("예약이 완료되었습니다.");
-//            System.out.println(name+"님의 id는 "+createReservation(rooms.get(roomNumber), new Customer(name, phoneNumber, money))+" 입니다.");
-//            customerMode();
-//        } else if (room.compareTo(rooms.get(roomNumber)) < 0){
-//            System.out.println("소지금이 부족합니다.");
-//            reserveRoom();
-//        } 소지금 비교 후 예약
+        if(customer.getMoney() >= rooms.get(roomNumber).getRoomPrice()){
+            System.out.println("예약이 완료되었습니다.");
+            hotel.addHotelAsset(rooms.get(roomNumber).getRoomPrice());
+            customer.subtractCustomerMoney(rooms.get(roomNumber).getRoomPrice());
+            System.out.println(name+" 님의 id는 "+createReservation(rooms.get(roomNumber), customer)+" 입니다.");
+            System.out.println(name+" 님의 소지금은 "+customer.getMoney()+"원 남았습니다.");
+            customerMode();
+        } else{
+            System.out.println("소지금이 부족합니다.");
+            reserveRoom();
+        }
     }
     // 1-2-1. 예약 생성 및 리스트 저장
     public UUID createReservation(Room room, Customer customer){
