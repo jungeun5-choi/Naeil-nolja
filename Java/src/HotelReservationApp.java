@@ -281,7 +281,7 @@ public class HotelReservationApp {
         System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
         // System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID)); -> 날짜만 출력
 
-        System.out.printf("- 예약자: %s 님\n", getCustomerName(myUUID));
+        System.out.printf("- 예약자 명: %s 님\n", getCustomerName(myUUID));
         System.out.printf("- 예약자 전화번호: %s\n\n", getCustomerPhoneNumber(myUUID));
 
         System.out.printf("- 예약 객실 번호: %s\n", getRoom(myUUID).getRoomNumber());
@@ -383,8 +383,14 @@ public class HotelReservationApp {
     // 2-2 예약목록 조회
     public void viewReservedRoom() {
         if (reservedRoom.size() != 0) {
-            for (Map.Entry<UUID, Reservation> entrySet : reservedRoom.entrySet()) {
-                System.out.println(entrySet.getValue());
+            System.out.printf("[전체 예약 정보]\n");
+
+            for (int i = 0; i < reservedRoom.size(); i++) {
+                System.out.printf("▶ %d번 예약 건\n", i + 1); // 번호
+                System.out.printf("%s\t|\t", getCustomerName(reservedUUIDList.get(i)));
+                System.out.printf("%s\t|\t", reservedUUIDList.get(i)); // UUID 출력
+                System.out.printf("%s", getParseDate(reservedUUIDList.get(i))); // 예약 출력
+                System.out.printf("\n\n");
             }
             hotelMode();
         } else {
