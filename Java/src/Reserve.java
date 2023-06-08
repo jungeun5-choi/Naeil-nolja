@@ -1,4 +1,5 @@
-import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -25,14 +26,22 @@ public class Reserve {
         return reservedRoom.get(myUUID).getRoom();
     }
     // 1개의 Reservation에서 LocalDateTime만 호출 - uuid 필요
-    public LocalDate getLocalDate(UUID myUUID) {
+    public ZonedDateTime getZonedDateTime(UUID myUUID) {
         return reservedRoom.get(myUUID).getReservationDate();
+    }
+
+    // 1개의 Reservation에서 파싱한 날짜+시간 정보 호출 - uuid 필요
+    public String getParseDateTime(UUID myUUID) {
+
+        String parseDateTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"));
+
+        return parseDateTime;
     }
 
     // 1개의 Reservation에서 파싱한 날짜 정보 호출 - uuid 필요
     public String getParseDate(UUID myUUID) {
 
-        String parseDate = getLocalDate(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String parseDate = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         return parseDate;
     }
@@ -62,9 +71,10 @@ public class Reserve {
         // UUID 생성
         UUID uuid = UUID.randomUUID();
         // 예약 생성
+        ZoneOffset seoul = ZoneOffset.of("+09:00");
         Reservation reservation = new Reservation(
                 room, customer.getName(), customer.getPhoneNumber(),
-                LocalDate.now(), uuid
+                ZonedDateTime.now(seoul), uuid
         );
         
         // 생성한 예약을 추가
@@ -104,8 +114,8 @@ public class Reserve {
         System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
 
         System.out.printf("- 예약 번호: %s\n", myUUID.toString());        
-        // System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
-        System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID));
+        System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
+        //System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID));
 
         System.out.printf("- 예약자 명: %s 님\n", getCustomerName(myUUID));
         System.out.printf("- 예약자 전화번호: %s\n\n", getCustomerPhoneNumber(myUUID));
