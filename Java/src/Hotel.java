@@ -1,15 +1,18 @@
 import java.util.*;
 
 public class Hotel {
-    HotelReservationApp hotelReservationApp;
+    private int password = 12345;
     private String hotelName; // 호텔 이름
-    private TreeMap<Integer,Room> rooms = new TreeMap<>(); // 객실 여러개
+
+    private TreeMap<Integer, Room> rooms = new TreeMap<>(); // 객실 여러개
     private int asset; // 보유 자산
 //    private UUID reservationNumber; // 예약 번호 (uuid)
 
     /* 생성자 */
-    public Hotel(){}
-    public Hotel(String hotelName, TreeMap<Integer,Room> rooms, int asset){//, UUID reservationNumber) {
+    public Hotel() {
+    }
+
+    public Hotel(String hotelName, TreeMap<Integer, Room> rooms, int asset) {//, UUID reservationNumber) {
         this.hotelName = hotelName;
         this.rooms = rooms;
         this.asset = asset;
@@ -20,14 +23,19 @@ public class Hotel {
     public String getHotelName() {
         return hotelName;
     }
+
     public int getAsset() {
         return asset;
     }
 
+    public int getPassword() {
+        return password;
+    }
 
-    public TreeMap<Integer,Room> getRooms() { // 객실 전체
+    public TreeMap<Integer, Room> getRooms() { // 객실 전체
         return rooms;
     }
+
     public Room getRoom(int index) { // 객실 한 개
         return rooms.get(index);
     }
@@ -36,7 +44,7 @@ public class Hotel {
 //        return reservationNumber;
 //    }
 
-//    public Room getCheapestRoom()
+    //    public Room getCheapestRoom()
 //    {
 //        return Collections.min(rooms);
 //    }
@@ -61,6 +69,7 @@ public class Hotel {
     public void addHotelAsset(int asset) {
         this.asset += asset;
     }
+
     // 자산 빼기
     public void subtractHotelAsset(int asset) {
         this.asset -= asset;
