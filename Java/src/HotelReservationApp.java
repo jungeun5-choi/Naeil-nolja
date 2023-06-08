@@ -20,6 +20,7 @@ public class HotelReservationApp {
     public static final String FONT_BLUE = "\u001B[34m";
     ZoneOffset seoul = ZoneOffset.of("+09:00");
 
+    /* 생성자 */
     public HotelReservationApp(Scanner sc, Hotel hotel, Room room, Reservation reservation, Customer customer) {
         this.sc = sc;
         this.hotel = hotel;
@@ -69,14 +70,6 @@ public class HotelReservationApp {
         return parseDate;
     }
 
-    // 1개의 Reservation에서 파싱한 시간 정보 호출 - uuid 필요
-    public String getParseTime(UUID myUUID) {
-
-        String parseTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-
-        return parseTime;
-    }
-
     // 1개의 Reservation에서 고객 이름 정보만 호출 - uuid 필요
     public String getCustomerName(UUID myUUID) {
         return reservedRoom.get(myUUID).getCustomerName();
@@ -87,17 +80,7 @@ public class HotelReservationApp {
         return reservedRoom.get(myUUID).getCustomerPhoneNumber();
     }
 
-    // 전체 예약 개수를 호출
-    public int getReservedCount() {
-        return reservedRoom.size();
-    }
-
-    // 전체 키 값(uuid)을 호출
-    public LinkedList<UUID> getAllReservedUUID() {
-        return reservedUUIDList;
-    }
     /* 메서드 */
-
     // 최초 진입점
     public void startApp() {
         inputHotel();
@@ -141,16 +124,16 @@ public class HotelReservationApp {
         int selectMenu = sc.nextInt();
         sc.nextLine();
         switch (selectMenu) {
-            case 1: // 객실 조회
+            case 1: // 1-1. 객실 조회
                 showRoom();
                 break;
-            case 2:
+            case 2: // 1-2. 예약 조회 -> UUID 값을 이용함
                 myReservation(reservation.getReservationNumber());
                 break;
-            case 3: // 예약 취소
+            case 3: // 1-3. 예약 취소 -> UUID 값을 이용흠
                 cancelMyReservation(reservation.getReservationNumber());
                 break;
-            case 4: // 모드선택으로 돌아가기
+            case 4: // 1-4. 모드선택으로 돌아가기
                 selectModeInput();
                 break;
         }
@@ -160,21 +143,32 @@ public class HotelReservationApp {
     public void showRoom() {
         Room selectedRoom;
         while (true) {
-            selectRoomList();
-            selectPrint();
-            System.out.println("1. 전체 객실 2. 최저가 순 3. 최고가 순 4.날짜 변경 5. 돌아 가기"); //최저가, 최고가 정렬
+            selectRoomList();   // 호텔 전체 객실 / 날짜가 겹칠 경우 리스트에서 제거
+            selectPrint();  // 날짜에 대한 요일 표기
+            System.out.println("1. 전체 객실 2. 최저가 순 3. 최고가 순 4. 날짜 변경 5. 돌아 가기"); //최저가, 최고가 정렬
             System.out.println("===============================");
             System.out.print("번호를 입력하세요 : ");
             if (selectSortOption(sc.nextInt()) == 0) continue;
             System.out.println("1. 예약하기 2. 뒤로가기");
             if (selectReservationOption(sc.nextInt()) == 0) continue;
             sc.nextLine();
-            selectedRoom = selectRoomNumber();
-            if (selectedRoom == null) continue;
+            selectedRoom = selectRoomNumber();  // 1-2. 예약하기로 이동
+            if (selectedRoom == null);
             else break;
         }
     }
-
+    // 1-1-1. 호텔의 전체 객실
+    public void selectRoomList() {
+        reservatedCount = 0;
+        rooms = new TreeMap<>(hotel.getRooms()); // rooms에 호텔 전체객실 getRooms() 붙여넣기
+        for (Reservation reservation : reservedRoom.values()) {
+            if (selectedDate.isEqual(reservation.getDate())) {//선택날짜와 예약된 날짜가 같은경우
+                rooms.remove(reservation.getRoom().getRoomNumber()); // 예약정보 중 객실번호를 가져와 rooms에서 제거
+                reservatedCount++;
+            }
+        }
+    }
+    // 1-1-2. 호텔 예약 날짜의 요일 표기
     public void selectPrint() {
         System.out.println("===============================");
         System.out.println("\"스파르타 호텔에 오신 것을 환영합니다!\"");
@@ -206,8 +200,8 @@ public class HotelReservationApp {
         System.out.println(FONT_GREEN + "해당날짜의 투숙가능한 객실은 " + FONT_BLUE + rooms.size() + FONT_GREEN + "개 입니다." + FONT_BLUE + "(예약 " + reservatedCount + "명)" + FONT_RESET);
         System.out.println("조회할 방법을 선택하세요.");
     }
-
-    public int selectSortOption(int input) {//객실조회옵션선택
+    // 1-1-3. 객실 조회 옵션 선택
+    public int selectSortOption(int input) {
         sc.nextLine(); // 입력버퍼
         switch (input) {
             case 1: {  //전체 객실 조회
@@ -242,18 +236,6 @@ public class HotelReservationApp {
         }
         return 0;
     }
-
-    public void selectRoomList() {
-        reservatedCount = 0;
-        rooms = new TreeMap<>(hotel.getRooms()); // rooms에 호텔 전체객실 getRooms() 붙여넣기
-        for (Reservation reservation : reservedRoom.values()) {
-            if (selectedDate.isEqual(reservation.getDate())) {//선택날짜와 예약된 날짜가 같은경우
-                rooms.remove(reservation.getRoom().getRoomNumber()); // 예약정보 중 객실번호를 가져와 rooms에서 제거
-                reservatedCount++;
-            }
-        }
-    }
-
     public void selectAll() {
         System.out.println(" 객실 정보 :");
         for (Room room : rooms.values()) {
@@ -328,13 +310,13 @@ public class HotelReservationApp {
         int roomNumber;
         Room selectedRoom = null;
         while (true) {
-            selectAll();
+            selectAll(); // 모든 객실의 정보를 보여줌
             System.out.print("객실을 선택하세요 : ");
             roomNumber = sc.nextInt();
             sc.nextLine();
             if (rooms.containsKey(roomNumber)) {
                 System.out.println("선택한 객실 :");
-                rooms.get(roomNumber).showIntroduce();
+                rooms.get(roomNumber).showIntroduce();  // 선택한 객실의 정보
                 System.out.println("이 객실의 예약을 진행하시겠습니까?");
                 System.out.printf("%-10s %-10s\n", "1. 예약하기", "2. 돌아가기");
                 if (sc.nextInt() == 1) {
@@ -344,9 +326,9 @@ public class HotelReservationApp {
                     String phoneNumber = enterPhoneNumberInput();
                     System.out.print("소지금을 입력하세요 : ");
                     int money = enterMoneyInput();
-                    Customer customer = new Customer(name, phoneNumber, money);
+                    Customer customer = new Customer(name, phoneNumber, money); // Customer 생성(name, phoneNumber, money 중 하나를 빼오기 위함)
 
-                    if (customer.getMoney() >= rooms.get(roomNumber).getRoomPrice()) {
+                    if (customer.getMoney() >= rooms.get(roomNumber).getRoomPrice()) {  // Customer의 money와 선택한 객실의 roomPrice 비교
                         System.out.println("예약이 완료되었습니다.");
                         hotel.addHotelAsset(rooms.get(roomNumber).getRoomPrice());
                         customer.subtractCustomerMoney(rooms.get(roomNumber).getRoomPrice());
@@ -390,6 +372,22 @@ public class HotelReservationApp {
     }
 
     // 1-3. 개인 예약조회
+    public void myReservation(UUID myUUID) {
+        try {
+            System.out.print("예약번호를 입력하세요 : ");
+            UUID id = UUID.fromString(sc.next());   // String의 형태를 UUID로 변환
+            for (UUID uuid : reservedUUIDList) {
+                if (uuid.equals(id)) {  // String으로 입력된 UUID를 리스트의 id값과 비교
+                    printMyReservation(id);
+                    customerMode();
+                }
+            }
+        } catch (IllegalArgumentException e) {  // 예외처리
+            System.out.println("잘못된 id 입니다.");
+            customerMode();
+        }
+    }
+    // 1-3-1. 개인 예약 상세내역
     public void printMyReservation(UUID myUUID) {
 
         System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
@@ -405,23 +403,6 @@ public class HotelReservationApp {
         System.out.printf("- 예약 객실 크기: %s\n", getRoom(myUUID).getRoomSize());
         System.out.printf("- 예약 객실 가격: %s 원\n", getRoom(myUUID).getRoomPrice());
     }
-
-    public void myReservation(UUID myUUID) {
-        try {
-            System.out.print("예약번호를 입력하세요 : ");
-            UUID id = UUID.fromString(sc.next());
-            for (UUID uuid : reservedUUIDList) {
-                if (uuid.equals(id)) {
-                    printMyReservation(id);
-                    customerMode();
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println("잘못된 id 입니다.");
-            customerMode();
-        }
-    }
-
     // 1-4. 객실 예약취소
     public void cancelMyReservation(UUID myUUID) {
         try {
@@ -437,6 +418,7 @@ public class HotelReservationApp {
                     int number = sc.nextInt();
                     sc.nextLine();
                     if (number == 1) {
+                        // 예약 취소된 객실의 가격만큼 호텔 자산에서 감소
                         hotel.subtractHotelAsset(reservedRoom.get(id).getRoom().getRoomPrice());
                         // 예약 내역 삭제
                         reservedRoom.remove(id);
@@ -514,6 +496,5 @@ public class HotelReservationApp {
             System.out.println("\n예약된 객실이 없습니다.");
             hotelMode();
         }
-        // 2-3 남은 객실 조회?
     }
 }
