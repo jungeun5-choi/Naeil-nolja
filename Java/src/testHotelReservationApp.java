@@ -3,12 +3,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
-public class HotelReservationApp {
+public class testHotelReservationApp {
     Scanner sc;
     Customer customer;
     Hotel hotel;
     Reservation reservation;
     Room room;
+    testReserve TestReserve = new testReserve();
+    testDevice TestDevice = new testDevice();
     private LocalDate selectedDate = LocalDate.now();
     int reservatedCount = 0;
     private TreeMap<Integer, Room> rooms = new TreeMap<>();
@@ -20,7 +22,7 @@ public class HotelReservationApp {
     ZoneOffset seoul = ZoneOffset.of("+09:00");
 
     /* 생성자 */
-    public HotelReservationApp(Scanner sc, Hotel hotel, Room room, Reservation reservation, Customer customer) {
+    public testHotelReservationApp(Scanner sc, Hotel hotel, Room room, Reservation reservation, Customer customer) {
         this.sc = sc;
         this.hotel = hotel;
         this.room = room;
@@ -40,45 +42,6 @@ public class HotelReservationApp {
 
         hotel = new Hotel("스파르타 호텔", rooms, hotel.getAsset());
     }
-
-    /* getter */
-    // 1개의 Reservation에서 room 정보만 호출 - uuid 필요
-    public Room getRoom(UUID myUUID) {
-        return reservedRoom.get(myUUID).getRoom();
-    }
-
-    // 1개의 Reservation에서 LocalDateTime만 호출 - uuid 필요
-    public ZonedDateTime getZonedDateTime(UUID myUUID) {
-        return reservedRoom.get(myUUID).getReservationDate();
-    }
-
-    // 1개의 Reservation에서 파싱한 날짜:시간 정보 호출 - uuid 필요
-    public String getParseDateTime(UUID myUUID) {
-
-//        String parseDateTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")); 1234-56-78 12:34:56 형태변환
-        String parseDateTime = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
-
-        return parseDateTime;
-    }
-
-    // 1개의 Reservation에서 파싱한 날짜 정보 호출 - uuid 필요
-    public String getParseDate(UUID myUUID) {
-
-        String parseDate = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // 1234-56-78 형태변환
-//        String parseDate = getZonedDateTime(myUUID).now(seoul).withNano(0).toString(); // 2016-10-27T17:13:40+00:00 형식
-        return parseDate;
-    }
-
-    // 1개의 Reservation에서 고객 이름 정보만 호출 - uuid 필요
-    public String getCustomerName(UUID myUUID) {
-        return reservedRoom.get(myUUID).getCustomerName();
-    }
-
-    // 1개의 Reservation에서 고객 전화번호만 호출 - uuid 필요
-    public String getCustomerPhoneNumber(UUID myUUID) {
-        return reservedRoom.get(myUUID).getCustomerPhoneNumber();
-    }
-
     /* 메서드 */
     // 최초 진입점
     public void startApp() {
@@ -389,18 +352,18 @@ public class HotelReservationApp {
     // 1-3-1. 개인 예약 상세내역
     public void printMyReservation(UUID myUUID) {
 
-        System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
+        System.out.printf("[%s 님의 예약 정보]\n", TestReserve.getCustomerName(myUUID));
 
         System.out.printf("- 예약 번호: %s\n", myUUID.toString());
-        System.out.printf("- 예약 날짜: %s\n\n", getParseDateTime(myUUID));
+        System.out.printf("- 예약 날짜: %s\n\n", TestReserve.getParseDateTime(myUUID));
         // System.out.printf("- 예약 날짜: %s\n\n", getParseDate(myUUID)); -> 날짜만 출력
 
-        System.out.printf("- 예약자 명: %s 님\n", getCustomerName(myUUID));
-        System.out.printf("- 예약자 전화번호: %s\n\n", getCustomerPhoneNumber(myUUID));
+        System.out.printf("- 예약자 명: %s 님\n", TestReserve.getCustomerName(myUUID));
+        System.out.printf("- 예약자 전화번호: %s\n\n", TestReserve.getCustomerPhoneNumber(myUUID));
 
-        System.out.printf("- 예약 객실 번호: %s\n", getRoom(myUUID).getRoomNumber());
-        System.out.printf("- 예약 객실 크기: %s\n", getRoom(myUUID).getRoomSize());
-        System.out.printf("- 예약 객실 가격: %s 원\n", getRoom(myUUID).getRoomPrice());
+        System.out.printf("- 예약 객실 번호: %s\n", TestReserve.getRoom(myUUID).getRoomNumber());
+        System.out.printf("- 예약 객실 크기: %s\n", TestReserve.getRoom(myUUID).getRoomSize());
+        System.out.printf("- 예약 객실 가격: %s 원\n", TestReserve.getRoom(myUUID).getRoomPrice());
     }
     // 1-4. 객실 예약취소
     public void cancelMyReservation(UUID myUUID) {
@@ -485,9 +448,9 @@ public class HotelReservationApp {
 
             for (int i = 0; i < reservedRoom.size(); i++) {
                 System.out.printf("▶ %d번 예약 건\n", i + 1); // 번호
-                System.out.printf("%s\t|\t", getCustomerName(reservedUUIDList.get(i)));
+                System.out.printf("%s\t|\t", TestReserve.getCustomerName(reservedUUIDList.get(i)));
                 System.out.printf("%s\t|\t", reservedUUIDList.get(i)); // UUID 출력
-                System.out.printf("%s", getParseDate(reservedUUIDList.get(i))); // 예약 출력
+                System.out.printf("%s", TestReserve.getParseDate(reservedUUIDList.get(i))); // 예약 출력
                 System.out.printf("\n\n");
             }
             hotelMode();

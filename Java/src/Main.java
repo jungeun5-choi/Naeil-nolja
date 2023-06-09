@@ -11,8 +11,7 @@ public class Main {
 
         app.startApp();
 
-//        Device device = new Device();
-//        device.inputHotel();
-//        device.display();
+//        testHotelReservationApp testApp = new testHotelReservationApp(sc, hotel, room, reservation, customer);
+//        testApp.startApp();
     }
 }
