@@ -8,7 +8,6 @@ public class Main {
         Reservation reservation = new Reservation();
         Room room = new Room();
         HotelReservationApp app = new HotelReservationApp(sc, hotel, room, reservation, customer);
-        app.inputHotel();
         app.startApp();
     }
 }

@@ -5,13 +5,17 @@ import java.util.*;
 
 public class Reserve {
     Scanner sc = new Scanner(System.in);
-    Hotel hotel;
-    HotelReservationApp app;
+    Customer customer = new Customer();
+    Hotel hotel = new Hotel();
+    Reservation reservation = new Reservation();
+    Room room = new Room();
+    HotelReservationApp app = new HotelReservationApp(sc, hotel, room, reservation, customer);
     /* 필드 */
     // 예약정보
     Map<UUID, Reservation> reservedRoom = new HashMap<>();
     // 예약 키 값
     LinkedList<UUID> reservedUUIDList = new LinkedList<>();
+    Map<UUID, Reservation> reservatedMap = new HashMap<UUID, Reservation>(); // 예약리스트. 이미 예약된 객실을 조회목록에서 빼기 위한 테스트용
     /* 생성자 */
     public Reserve() {}
     /* getter */
@@ -50,8 +54,55 @@ public class Reserve {
     public LinkedList<UUID> getAllReservedUUID() {
         return reservedUUIDList;
     }
-
     /* 메서드 */
+    // 1-2. 객실 예약하기
+    public Room selectRoomNumber() {
+        int roomNumber;
+        Room selectedRoom = null;
+        while (true) {
+//            selectAll(); // 모든 객실의 정보를 보여줌
+            System.out.print("객실을 선택하세요 : ");
+            roomNumber = sc.nextInt();
+            sc.nextLine();
+            if (app.rooms.containsKey(roomNumber)) {
+                System.out.println("선택한 객실 :");
+                app.rooms.get(roomNumber).showIntroduce();  // 선택한 객실의 정보
+                System.out.println("이 객실의 예약을 진행하시겠습니까?");
+                System.out.printf("%-10s %-10s\n", "1. 예약하기", "2. 돌아가기");
+                if (sc.nextInt() == 1) {
+                    System.out.print("이름을 입력하세요 : ");
+                    String name = sc.next();
+                    System.out.print("번호를 입력하세요 : ");
+                    String phoneNumber = sc.next();
+                    System.out.print("소지금을 입력하세요 : ");
+                    int money = sc.nextInt();
+                    Customer customer = new Customer(name, phoneNumber, money); // Customer 생성(name, phoneNumber, money 중 하나를 빼오기 위함)
+
+                    if (customer.getMoney() >= app.rooms.get(roomNumber).getRoomPrice()) {  // Customer의 money와 선택한 객실의 roomPrice 비교
+                        createReservation(app.rooms.get(roomNumber),customer);
+                        System.out.println("예약이 완료되었습니다.");
+                        hotel.addHotelAsset(app.rooms.get(roomNumber).getRoomPrice());
+                        customer.subtractCustomerMoney(app.rooms.get(roomNumber).getRoomPrice());
+                        System.out.println(name + " 님의 id는 " + createReservation(app.rooms.get(roomNumber), customer) + " 입니다.");
+                        System.out.println(name + " 님의 소지금은 " + customer.getMoney() + "원 남았습니다.");
+                        app.customerMode();
+                    } else {
+                        System.out.println("소지금이 부족합니다.");
+                    }
+                    selectedRoom = app.rooms.get(roomNumber);
+                } else {
+                    System.out.println("예약할 객실번호를 입력하세요.(돌아가기 - 0 )");
+                }
+            } else if (roomNumber == 0) {
+                System.out.println("초기 화면으로 돌아갑니다.");
+                break;
+            } else {
+                System.out.println("선택한 객실 번호는 없습니다. 다시 입력해주세요.");
+                System.out.println("예약할 객실번호를 입력하세요.(돌아가기 - 0 )");
+            }
+        }
+        return selectedRoom;
+    }
     // 1-2-1. 예약 생성 및 리스트 저장 -> UUID 반환
     public UUID createReservation(Room room, Customer customer){
 
@@ -96,8 +147,24 @@ public class Reserve {
         }
     }
     // 1-3. 개별 예약 조회 (parameter : uuid)
-    public Reservation viewMyReservation(UUID myUUID) {
-        return reservedRoom.get(myUUID);
+//    public Reservation viewMyReservation(UUID myUUID) {
+//        return reservedRoom.get(myUUID);
+//    }
+    // 1-3. 개인 예약조회
+    public void myReservation(UUID myUUID) {
+        try {
+            System.out.print("예약번호를 입력하세요 : ");
+            UUID id = UUID.fromString(sc.next());   // String의 형태를 UUID로 변환
+            for (UUID uuid : reservedUUIDList) {
+                if (uuid.equals(id)) {  // String으로 입력된 UUID를 리스트의 id값과 비교
+                    printMyReservation(id);
+                    app.customerMode();
+                }
+            }
+        } catch (IllegalArgumentException e) {  // 예외처리
+            System.out.println("잘못된 id 입니다.");
+            app.customerMode();
+        }
     }
     // 1-3-1. 개인 예약 상세내역 (parameter : uuid)
     public void printMyReservation(UUID myUUID) {
