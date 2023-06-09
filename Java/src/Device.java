@@ -4,22 +4,23 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Device {
-    private TreeMap<Integer, Room> rooms = new TreeMap<>();
-    public static final String FONT_GREEN = "\u001B[32m";
-    public static final String FONT_RESET = "\u001B[0m";
-    public static final String FONT_BLUE = "\u001B[34m";
-    Reserve reserve;
-    HotelReservationApp app;
+    TreeMap<Integer, Room> rooms = new TreeMap<>();
+    Reserve reserve = new Reserve();
     Hotel hotel;
+    Scanner sc = new Scanner(System.in);
+    HotelReservationApp app;
     private LocalDate selectedDate = LocalDate.now();
     Map<UUID, Reservation> reservatedMap = new HashMap<UUID, Reservation>(); // 예약리스트. 이미 예약된 객실을 조회목록에서 빼기 위한 테스트용
     int reservatedCount = 0;
-    Scanner sc = new Scanner(System.in);
+    public static final String FONT_GREEN = "\u001B[32m";
+    public static final String FONT_RESET = "\u001B[0m";
+    public static final String FONT_BLUE = "\u001B[34m";
+    // 1-1. 객실 목록 조회
     public void display() {
         Room selectedRoom;
         while (true) {
-            selectRoomList();
-            selectPrint(); //
+            selectRoomList();   // 호텔 전체 객실 / 날짜가 겹칠 경우 리스트에서 제거
+            selectPrint();  // 날짜에 대한 요일 표기
             System.out.println("1. 전체 객실 2. 최저가 순 3. 최고가 순 4.날짜 변경 5. 돌아 가기"); //최저가, 최고가 정렬
             System.out.println("===============================");
             System.out.print("번호를 입력하세요 : ");
@@ -34,7 +35,7 @@ public class Device {
         }
         //선택한 Room 객체 selectedRoom과 selectedDate 이용 예약진행
     }
-
+    // 1-1-1. 호텔의 전체 객실
     public void selectRoomList(){
         reservatedCount=0;
         rooms = new TreeMap<>(hotel.getRooms()); // rooms에 호텔 전체객실 getRooms() 붙여넣기
@@ -45,6 +46,7 @@ public class Device {
             }
         }
     }
+    // 1-1-2. 호텔 예약 날짜의 요일 표기 및 날짜별 예약 명수 확인
     public void selectPrint() {
         System.out.println("===============================");
         System.out.println("\"스파르타 호텔에 오신 것을 환영합니다!\"");
@@ -63,8 +65,8 @@ public class Device {
         System.out.println("조회할 방법을 선택하세요.");
 
     }
-
-    public int selectSortOption(int input) {//객실조회옵션선택
+    // 1-1-3. 객실 조회 옵션 선택
+    public int selectSortOption(int input) {
         sc.nextLine();
         switch (input) {
             case 1: {  //전체 객실 조회
@@ -95,6 +97,7 @@ public class Device {
         }
         return 0;
     }
+    // 1-1-4. 예약 날짜 변경
     public void changeselectedDate() {
         System.out.println("예약하고 싶은 날짜를 입력하세요. (yyyy-mm-dd 형식으로 입력하세요.)");
         LocalDate date = null;
@@ -119,7 +122,7 @@ public class Device {
             System.out.println("예약날짜가 변경되었습니다. 해당 날짜의 예약가능한 객실을 다시 불러옵니다.");
         }
     }
-
+    // 1-1-5. 객실 번호 선택
     public int selectReservationOption(int input) {
         switch (input) {
             case 1: {
@@ -137,18 +140,18 @@ public class Device {
         }
         return 0;
     }
-
+    // 1-2. 객실 예약하기
     public Room selectRoomNumber() {
         int roomNumber;
         Room selectedRoom = null;
         while (true) {
-            selectAll();
+//            selectAll(); // 모든 객실의 정보를 보여줌
             System.out.print("객실을 선택하세요 : ");
             roomNumber = sc.nextInt();
             sc.nextLine();
             if (rooms.containsKey(roomNumber)) {
                 System.out.println("선택한 객실 :");
-                rooms.get(roomNumber).showIntroduce();
+                rooms.get(roomNumber).showIntroduce();  // 선택한 객실의 정보
                 System.out.println("이 객실의 예약을 진행하시겠습니까?");
                 System.out.printf("%-10s %-10s\n", "1. 예약하기", "2. 돌아가기");
                 if (sc.nextInt() == 1) {
@@ -158,10 +161,10 @@ public class Device {
                     String phoneNumber = sc.next();
                     System.out.print("소지금을 입력하세요 : ");
                     int money = sc.nextInt();
-                    sc.nextLine();
-                    Customer customer = new Customer(name, phoneNumber, money);
+                    Customer customer = new Customer(name, phoneNumber, money); // Customer 생성(name, phoneNumber, money 중 하나를 빼오기 위함)
 
-                    if (customer.getMoney() >= rooms.get(roomNumber).getRoomPrice()) {
+                    if (customer.getMoney() >= rooms.get(roomNumber).getRoomPrice()) {  // Customer의 money와 선택한 객실의 roomPrice 비교
+                        reserve.createReservation(rooms.get(roomNumber),customer);
                         System.out.println("예약이 완료되었습니다.");
                         hotel.addHotelAsset(rooms.get(roomNumber).getRoomPrice());
                         customer.subtractCustomerMoney(rooms.get(roomNumber).getRoomPrice());
@@ -198,29 +201,3 @@ public class Device {
         }
     }
 }
-
-//    public void inputHotel() {
-//        //rooms에 key=호실번호, value= room객체를 담기
-//        rooms.put(101, new Room(101, RoomSize.Standard, 62000));
-//        rooms.put(102, new Room(102, RoomSize.Standard, 74000));
-//        rooms.put(201, new Room(201, RoomSize.Twin, 80000));
-//        rooms.put(202, new Room(202, RoomSize.Twin, 76000));
-//        rooms.put(301, new Room(301, RoomSize.Delux, 90000));
-//        rooms.put(402, new Room(402, RoomSize.Family, 110000));
-//        rooms.put(502, new Room(502, RoomSize.Suite, 150000));
-//
-//        UUID uuid1 = UUID.randomUUID();
-//        UUID uuid2 = UUID.randomUUID();
-//        UUID uuid3 = UUID.randomUUID();
-//        Reservation reservation1 = new Reservation( new Room(502, RoomSize.Suite, 150000),"조우진","010-1234-1234", LocalDate.parse("2023-06-08",DateTimeFormatter.ISO_DATE),uuid1);
-//        Reservation reservation2 = new Reservation( new Room(101, RoomSize.Standard, 62000),"조우진","010-1234-1234",LocalDate.parse("2023-06-09",DateTimeFormatter.ISO_DATE),uuid2);
-//        Reservation reservation3 = new Reservation( new Room(102, RoomSize.Standard, 74000),"조우진","010-1234-1234",LocalDate.parse("2023-06-09",DateTimeFormatter.ISO_DATE),uuid3);
-//        //예약리스트에 포함. 예약된 객실을 조회목록에서 빼기 위한 테스트용
-//        reservatedMap.put(uuid1,reservation1);
-//        reservatedMap.put(uuid2,reservation2);
-//        reservatedMap.put(uuid3,reservation3);
-//
-//
-//        hotel = new Hotel("스파르타 호텔", rooms, 0);
-//
-//    }

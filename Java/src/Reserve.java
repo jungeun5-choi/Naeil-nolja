@@ -1,26 +1,19 @@
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Reserve {
-
+    Scanner sc = new Scanner(System.in);
+    Hotel hotel;
+    HotelReservationApp app;
     /* 필드 */
-    private Reservation reservation;
-
     // 예약정보
     Map<UUID, Reservation> reservedRoom = new HashMap<>();
     // 예약 키 값
     LinkedList<UUID> reservedUUIDList = new LinkedList<>();
-
     /* 생성자 */
     public Reserve() {}
-    /*
-    public Reserve(Reservation reservation) {
-        this.reservation = reservation;
-    }*/
-
     /* getter */
     // 1개의 Reservation에서 room 정보만 호출 - uuid 필요
     public Room getRoom(UUID myUUID) {
@@ -33,17 +26,11 @@ public class Reserve {
 
     // 1개의 Reservation에서 파싱한 날짜+시간 정보 호출 - uuid 필요
     public String getParseDateTime(UUID myUUID) {
-
         String parseDateTime = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"));
-
         return parseDateTime;
     }
-
-
     public String getParseDate(UUID myUUID) {
-
         String parseDate = getZonedDateTime(myUUID).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
         return parseDate;
     }
 
@@ -55,7 +42,6 @@ public class Reserve {
     public String getCustomerPhoneNumber(UUID myUUID) {
         return reservedRoom.get(myUUID).getCustomerPhoneNumber();
     }
-
     // 전체 예약 개수를 호출
     public int getReservedCount() {
         return reservedRoom.size();
@@ -66,7 +52,7 @@ public class Reserve {
     }
 
     /* 메서드 */
-    // 1. 예약 생성 - 예약 번호 반환
+    // 1-2-1. 예약 생성 및 리스트 저장 -> UUID 반환
     public UUID createReservation(Room room, Customer customer){
 
         // UUID 생성
@@ -93,25 +79,28 @@ public class Reserve {
     }
     // 2-2. 전체 예약 목록 조회 - 출력 형식
     public void printAllReservation() {
-        System.out.printf("[전체 예약 정보]\n");
+        if (reservedRoom.size() != 0) {
+            System.out.printf("[전체 예약 정보]\n");
 
-        for(int i = 0; i < reservedRoom.size(); i++) {
-            System.out.printf("▶ %d번 예약 건\n", i+1); // 번호
-            System.out.printf("%s\t|\t", getCustomerName(reservedUUIDList.get(i)));
-            System.out.printf("%s\t|\t", reservedUUIDList.get(i)); // UUID 출력
-            System.out.printf("%s", getParseDate(reservedUUIDList.get(i))); // 예약 출력
-            System.out.printf("\n\n");
+            for (int i = 0; i < reservedRoom.size(); i++) {
+                System.out.printf("▶ %d번 예약 건\n", i + 1); // 번호
+                System.out.printf("%s\t|\t", getCustomerName(reservedUUIDList.get(i)));
+                System.out.printf("%s\t|\t", reservedUUIDList.get(i)); // UUID 출력
+                System.out.printf("%s", getParseDate(reservedUUIDList.get(i))); // 예약 출력
+                System.out.printf("\n\n");
+            }
+            app.hotelMode();
+        } else {
+            System.out.println("\n예약된 객실이 없습니다.");
+            app.hotelMode();
         }
     }
-
-
-    // 3-1. 개별 예약 조회 (parameter: uuid)
+    // 1-3. 개별 예약 조회 (parameter : uuid)
     public Reservation viewMyReservation(UUID myUUID) {
         return reservedRoom.get(myUUID);
     }
-    // 3-2. 개별 예약 조회 - 출력 형식
+    // 1-3-1. 개인 예약 상세내역 (parameter : uuid)
     public void printMyReservation(UUID myUUID) {
-
         System.out.printf("[%s 님의 예약 정보]\n", getCustomerName(myUUID));
 
         System.out.printf("- 예약 번호: %s\n", myUUID.toString());
@@ -123,16 +112,41 @@ public class Reserve {
         System.out.printf("- 예약 객실 번호: %s\n", getRoom(myUUID).getRoomNumber());
         System.out.printf("- 예약 객실 크기: %s\n", getRoom(myUUID).getRoomSize());
         System.out.printf("- 예약 객실 가격: %s 원\n", getRoom(myUUID).getRoomPrice());
-
-        System.out.printf("\n");
     }
 
     // 4. 예약 취소 (parameter: uuid)
     public void cancelMyReservation(UUID myUUID) {
-        // 예약 내역 삭제
-        reservedRoom.remove(myUUID);
-        // 저장했던 key값도 삭제
-        reservedUUIDList.remove(myUUID);
+        try {
+            System.out.print("예약번호를 입력하세요 : ");
+            UUID id = UUID.fromString(sc.next());
+            for (UUID uuid : reservedUUIDList) {
+                if (uuid.equals(id)) {
+                    System.out.println("===============================");
+                    printMyReservation(id);
+                    System.out.println("===============================");
+                    System.out.printf("%-10s %-10s\n", "1. 취소하기", "2. 돌아가기");
+                    System.out.print("번호를 입력하세요 : ");
+                    int number = sc.nextInt();
+                    sc.nextLine();
+                    if (number == 1) {
+                        // 예약 취소된 객실의 가격만큼 호텔 자산에서 감소
+                        hotel.subtractHotelAsset(reservedRoom.get(id).getRoom().getRoomPrice());
+                        // 예약 내역 삭제
+                        reservedRoom.remove(id);
+                        // 저장했던 key값도 삭제
+                        reservedUUIDList.remove(id);
+                        System.out.println("예약이 취소되었습니다.");
+                        app.customerMode();
+                    } else if (number == 2) {
+                        System.out.println("메인메뉴로 돌아갑니다.");
+                        app.customerMode();
+                    }
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("잘못된 id 입니다.");
+            app.customerMode();
+        }
     }
 }
 
