@@ -1,5 +1,5 @@
 # 🚂 Naeil-nolja
-> 
+> 💭 [KPT 회고](https://velog.io/@temprmn/KPT-%ED%9A%8C%EA%B3%A0)
 
 ## 목차
 * [프로젝트 개요](#프로젝트-개요)
