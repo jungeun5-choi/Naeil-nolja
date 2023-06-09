@@ -35,7 +35,7 @@
 > ✅ 예약 내역 조회 <br>
 
 ## 페이지 스크린샷
-![]()
+![](https://velog.velcdn.com/images/temprmn/post/6c1ca596-379c-4376-9eb9-760c983b648f/image.png)
 
 ## 프로젝트 진행 상태
 > 🚩 2023-06-07 `프로젝트 시작`<br>
